@@ -301,13 +301,30 @@
     ];
 
     const INITIAL_RULES = [
-      "1. Matches are played with tape-ball, 8 overs per side.",
-      "2. Strict Bowler Limit: Maximum 2.0 overs per bowler. No bowler can bowl consecutive overs.",
-      "3. Super Ball Rule: Batting side can call 1 Super Ball between Overs 2.0 and 6.6. Runs off the bat are DOUBLED (2x). If batsman gets OUT, a penalty of -5 RUNS is deducted from total.",
-      "4. Extras: Wide (+1 run) and No-Ball (+1 run with Free Hit). Byes & Leg-byes are not counted (strict bat/boundary runs only).",
-      "5. Free Hit: Dismissal is Run Out only. If a Super Ball is bowled on a Free Hit and batsman is caught/bowled, it is Not Out but -5 runs are deducted.",
-      "6. Playing 11: Exactly 11 players must be selected per team before the coin toss.",
-      "7. Tournament Progression: Top team in group goes directly to Grand Final. 2nd and 3rd place play the Knockout Playoff."
+      "1. Match Format:
+- Har team ko batting aur bowling ke liye 8 overs milenge.",
+      "2. Bowler Limit (Strict Rules)
+- Har bowler maximum 2 overs = 2.0 Overs kar sakta hai.
+- Koi bhi bowler consecutive overs = Lagataar 2 overs nahi kar sakta.",
+      "3. Super Ball Rule
+- Batting team Overs 2.0 se 6.6 ke darmiyan 1 Super Ball call kar sakti hai.
+- Super Ball par bat se banne wale runs = Double (2x) honge.
+- Agar batsman Super Ball par OUT hota hai = Team ke total score se 5 runs minus (-5) honge.",
+      "4. Extras
+- Wide Ball = +1 Run.
+- No Ball = +1 Run + Free Hit.
+- Byes aur Leg-Byes = Count nahi honge.",
+      "5. Free Hit Rule
+- Free Hit par Run Out ke ilawa koi bhi dismissal = OUT nahi hoga.
+- Agar Free Hit par Super Ball bhi ho aur batsman Caught ya Bowled hota hai = Not Out + 5 Runs Minus (-5).
+- Yani batsman OUT nahi hoga, lekin team ke total score se 5 runs deduct honge.",
+      "6. Playing XI
+- Har team ke exactly 11 players = Coin Toss se pehle select karna lazmi hai.
+- Toss ke baad Playing XI mein tabdeeli = Allowed nahi hogi.",
+      "7. Tournament Progression
+- Group ki pehli position wali team = Direct Grand Final mein qualify karegi.
+- Group ki doosri aur teesri position wali teams = Knockout Playoff khelenge.
+- Knockout Playoff jeetne wali team = Grand Final mein qualify karegi."
     ];
 
     let AppState = {
