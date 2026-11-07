@@ -289,15 +289,15 @@
     };
 
     // Sequential Fixture Schedule
-        const INITIAL_FIXTURES = [
-      { id: 1, type: 'GROUP', name: 'Match 1', teamA: 'ASK', teamB: 'KTG', overs: 8, status: 'unlocked', banner: 'match1_banner.jpg', result: null, scorecard: null },
-      { id: 2, type: 'GROUP', name: 'Match 2', teamA: 'ALW', teamB: 'NKG', overs: 8, status: 'locked',   banner: 'match2_banner.jpg', result: null, scorecard: null },
-      { id: 3, type: 'GROUP', name: 'Match 3', teamA: 'ASK', teamB: 'ALW', overs: 8, status: 'locked',   banner: 'match3_banner.jpg', result: null, scorecard: null },
-      { id: 4, type: 'GROUP', name: 'Match 4', teamA: 'KTG', teamB: 'NKG', overs: 8, status: 'locked',   banner: 'match4_banner.jpg', result: null, scorecard: null },
-      { id: 5, type: 'GROUP', name: 'Match 5', teamA: 'ASK', teamB: 'NKG', overs: 8, status: 'locked',   banner: 'match5_banner.jpg', result: null, scorecard: null },
-      { id: 6, type: 'GROUP', name: 'Match 6', teamA: 'ALW', teamB: 'KTG', overs: 8, status: 'locked',   banner: 'match6_banner.jpg', result: null, scorecard: null },
-      { id: 7, type: 'PLAYOFF', name: 'Playoff (Knockout)', subtitle: '2nd vs 3rd Place', overs: 8,       banner: 'playoff_banner.jpg', result: null, scorecard: null },
-      { id: 8, type: 'FINAL', name: 'Grand Final', subtitle: '1st Place vs Winner of Playoff', overs: 8, banner: 'final_banner.jpg',   result: null, scorecard: null }
+    const INITIAL_FIXTURES = [
+      { id: 1, type: 'GROUP', name: 'Match 1', teamA: 'ASK', teamB: 'KTG', overs: 8, status: 'unlocked', result: null, scorecard: null },
+      { id: 2, type: 'GROUP', name: 'Match 2', teamA: 'ALW', teamB: 'NKG', overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 3, type: 'GROUP', name: 'Match 3', teamA: 'ASK', teamB: 'ALW', overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 4, type: 'GROUP', name: 'Match 4', teamA: 'KTG', teamB: 'NKG', overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 5, type: 'GROUP', name: 'Match 5', teamA: 'ASK', teamB: 'NKG', overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 6, type: 'GROUP', name: 'Match 6', teamA: 'ALW', teamB: 'KTG', overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 7, type: 'PLAYOFF', name: 'Playoff (Knockout)', subtitle: '2nd vs 3rd Place', teamA: null, teamB: null, overs: 8, status: 'locked', result: null, scorecard: null },
+      { id: 8, type: 'FINAL', name: 'Grand Final', subtitle: '1st Place vs Winner of Playoff', teamA: null, teamB: null, overs: 8, status: 'locked', result: null, scorecard: null }
     ];
 
     const INITIAL_RULES = [
