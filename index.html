@@ -2294,7 +2294,8 @@
     }
 
     /**
-     * SCREEN 3: FIXTURES (RESPONSIVE GRID)
+    /**
+     * SCREEN 3: FIXTURES (RESPONSIVE GRID WITH BANNERS)
      */
     function renderFixturesScreen(container) {
       container.innerHTML = `
@@ -2304,55 +2305,64 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${AppState.fixtures.map(f => {
               const isLive = AppState.liveMatch && AppState.liveMatch.fixtureId === f.id;
+              let bannerUrl = (typeof MATCH_BANNERS !== 'undefined' && MATCH_BANNERS[f.id]) || f.banner || '';
+              if (bannerUrl) bannerUrl = bannerUrl.replace(/\\/g, '/');
               return `
-                <div class="rounded-3xl bg-[#0D1424] border ${isLive ? 'border-amber-500 shadow-amber-500/20' : f.status === 'unlocked' ? 'border-slate-700' : 'border-slate-800/60 opacity-80'} p-4 sm:p-5 shadow-xl flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-center justify-between mb-3">
-                      <span class="text-[10px] sm:text-xs font-black uppercase tracking-wider ${f.type === 'FINAL' ? 'text-amber-400' : 'text-slate-400'}">
-                        ${f.name} • ${f.type}
-                      </span>
-                      <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold ${
-                        isLive ? 'bg-red-500/20 text-red-400 animate-pulse' :
-                        f.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                        f.status === 'unlocked' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'
-                      }">
-                        ${isLive ? 'LIVE NOW' : f.status.toUpperCase()}
-                      </span>
-                    </div>
+                <div class="relative overflow-hidden rounded-3xl bg-[#0D1424] border ${isLive ? 'border-amber-500 shadow-amber-500/20' : f.status === 'unlocked' ? 'border-slate-700' : 'border-slate-800/60 opacity-90'} p-4 sm:p-5 shadow-xl flex flex-col justify-between min-h-[160px]">
+                  ${bannerUrl ? `
+                    <div class="absolute inset-0 z-0 bg-cover bg-center pointer-events-none transition-transform duration-500 hover:scale-105" style="background-image: url('${bannerUrl}');"></div>
+                    <div class="absolute inset-0 z-0 bg-gradient-to-b from-[#0D1424]/40 via-[#070B12]/60 to-[#070B12]/85 pointer-events-none"></div>
+                  ` : ''}
 
-                    <div class="flex items-center justify-between py-2">
-                      <div class="flex items-center space-x-3">
-                        ${renderTeamLogo(f.teamA, "w-10 h-10 sm:w-12 sm:h-12")}
-                        <div>
-                          <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[f.teamA]?.name || f.teamA || 'TBD'}</div>
-                          <div class="text-[10px] text-slate-400">${f.teamA || 'TBD'}</div>
+                  <div class="relative z-10 flex flex-col justify-between h-full">
+                    <div>
+                      <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] sm:text-xs font-black uppercase tracking-wider ${f.type === 'FINAL' ? 'text-amber-400' : 'text-slate-300'} drop-shadow">
+                          ${f.name} • ${f.type}
+                        </span>
+                        <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold shadow-md ${
+                          isLive ? 'bg-red-500/30 border border-red-500/50 text-red-300 animate-pulse' :
+                          f.status === 'completed' ? 'bg-emerald-500/30 border border-emerald-500/50 text-emerald-300' :
+                          f.status === 'unlocked' ? 'bg-amber-500/30 border border-amber-500/50 text-amber-300' : 'bg-slate-900/80 border border-slate-700 text-slate-400'
+                        }">
+                          ${isLive ? 'LIVE NOW' : f.status.toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div class="flex items-center justify-between py-2">
+                        <div class="flex items-center space-x-3">
+                          ${renderTeamLogo(f.teamA, "w-10 h-10 sm:w-12 sm:h-12")}
+                          <div>
+                            <div class="font-bold text-xs sm:text-sm text-white drop-shadow">${AppState.teams[f.teamA]?.name || f.teamA || 'TBD'}</div>
+                            <div class="text-[10px] text-slate-300 font-semibold drop-shadow">${f.teamA || 'TBD'}</div>
+                          </div>
+                        </div>
+                        <div class="font-display text-2xl font-black text-amber-400 drop-shadow px-2">VS</div>
+                        <div class="flex items-center space-x-3 text-right">
+                          <div>
+                            <div class="font-bold text-xs sm:text-sm text-white drop-shadow">${AppState.teams[f.teamB]?.name || f.teamB || 'TBD'}</div>
+                            <div class="text-[10px] text-slate-300 font-semibold drop-shadow">${f.teamB || 'TBD'}</div>
+                          </div>
+                          ${renderTeamLogo(f.teamB, "w-10 h-10 sm:w-12 sm:h-12")}
                         </div>
                       </div>
-                      <div class="font-display text-2xl font-black text-amber-400/80">VS</div>
-                      <div class="flex items-center space-x-3 text-right">
-                        <div>
-                          <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[f.teamB]?.name || f.teamB || 'TBD'}</div>
-                          <div class="text-[10px] text-slate-400">${f.teamB || 'TBD'}</div>
+
+                      ${f.result ? `
+                        <div class="mt-3 py-2 px-3 rounded-xl bg-slate-900/90 border border-slate-700 text-center text-xs font-bold text-emerald-400 backdrop-blur-sm">
+                          ${f.result}
                         </div>
-                        ${renderTeamLogo(f.teamB, "w-10 h-10 sm:w-12 sm:h-12")}
-                      </div>
+                      ` : ''}
                     </div>
 
-                    ${f.result ? `
-                      <div class="mt-3 py-2 px-3 rounded-xl bg-slate-900 border border-slate-800 text-center text-xs font-bold text-emerald-400">
-                        ${f.result}
+                    <!-- Start / Resume Button (ADMIN ONLY) -->
+                    ${isAdmin && (f.status === 'unlocked' || isLive) ? `
+                      <div class="mt-3.5 pt-3 border-t border-slate-700/80">
+                        <button onclick="launchMatchSetup(${f.id})" class="w-full py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 touch-target">
+                          ${isLive ? 'Resume Live Scoring' : 'Setup & Toss Match'}
+                        </button>
                       </div>
                     ` : ''}
                   </div>
-
-                  <!-- Start / Resume Button (ADMIN ONLY) -->
-                  ${isAdmin && (f.status === 'unlocked' || isLive) ? `
-                    <div class="mt-3.5 pt-3 border-t border-slate-800">
-                      <button onclick="launchMatchSetup(${f.id})" class="w-full py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 touch-target">
-                        ${isLive ? 'Resume Live Scoring' : 'Setup & Toss Match'}
-                      </button>
-                    </div>
-                  ` : ''}
                 </div>
               `;
             }).join('')}
