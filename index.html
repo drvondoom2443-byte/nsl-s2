@@ -50,9 +50,9 @@
   </script>
 
   <style>
-    ::-webkit-scrollbar { width: 3px; height: 3px; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #070B12; }
-    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
     .touch-target { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     
     /* 3D Coin Toss Animation */
@@ -94,7 +94,7 @@
 </head>
 <body class="bg-[#070B12] text-slate-100 min-h-screen flex flex-col font-sans select-none antialiased">
 
-  <!-- Broadcast Alert Overlay (Syncs to all mobiles, Zero Emojis) -->
+  <!-- Broadcast Alert Overlay (Zero Emojis) -->
   <div id="broadcastOverlay" class="fixed inset-0 pointer-events-none z-50 hidden flex items-center justify-center p-4">
     <div id="broadcastCard" class="px-8 py-5 rounded-3xl border-2 shadow-2xl flex flex-col items-center justify-center text-center backdrop-blur-xl max-w-xs w-full">
       <div id="broadcastTitle" class="font-display text-4xl sm:text-5xl font-black uppercase tracking-wider text-white">SUPER BALL</div>
@@ -102,65 +102,70 @@
     </div>
   </div>
 
-  <!-- Clean Uncluttered Header (No Scorer/Spectator Labels, Mobile-Optimized) -->
-  <header class="sticky top-0 z-40 bg-[#0D1424]/95 backdrop-blur-md border-b border-slate-800 px-3.5 py-2.5 shadow-lg">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2.5 cursor-pointer" onclick="navigateTo('home')">
+  <!-- Responsive Header (Full width on laptop/PC with max-w-7xl) -->
+  <header class="sticky top-0 z-40 bg-[#0D1424]/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
         <div id="nav-league-badge" class="shrink-0"></div>
         <div>
-          <span class="font-display text-2xl tracking-wider font-bold bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent leading-none">NSL S2</span>
-          <p class="text-[10px] text-slate-400 font-medium tracking-tight mt-0.5">Nawab Super League</p>
+          <span class="font-display text-2xl sm:text-3xl tracking-wider font-bold bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent leading-none">NSL S2</span>
+          <p class="text-[10px] sm:text-xs text-slate-400 font-medium tracking-tight mt-0.5">Nawab Super League</p>
         </div>
       </div>
-      <div class="text-right">
-        <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">Season 2</span>
-        <span class="text-[9px] font-semibold text-amber-400/80 block">Tape-Ball</span>
+      <div class="flex items-center space-x-3">
+        <div class="text-right">
+          <span class="text-[10px] sm:text-xs font-mono font-bold text-slate-400 uppercase tracking-widest block">Season 2</span>
+          <span class="text-[9px] sm:text-[10px] font-semibold text-amber-400/90 block">Tape-Ball Championship</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Global Live Mini Ticker (Mobile Width) -->
-  <div id="globalLiveTicker" class="hidden bg-gradient-to-r from-amber-600/20 via-purple-600/20 to-blue-600/20 border-b border-amber-500/30 px-3 py-1.5 cursor-pointer" onclick="navigateTo('live')">
-    <div class="max-w-md mx-auto flex items-center justify-between text-xs">
-      <div class="flex items-center space-x-1.5">
-        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+  <!-- Global Live Mini Ticker -->
+  <div id="globalLiveTicker" class="hidden bg-gradient-to-r from-amber-600/20 via-purple-600/20 to-blue-600/20 border-b border-amber-500/30 px-4 py-2 cursor-pointer" onclick="navigateTo('live')">
+    <div class="max-w-7xl mx-auto flex items-center justify-between text-xs">
+      <div class="flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
         <span class="font-bold text-amber-400 font-display text-sm uppercase tracking-wide" id="tickerMatchTitle">MATCH</span>
       </div>
-      <div class="font-bold text-white font-mono text-xs" id="tickerScoreSummary">0/0 (0.0 ov)</div>
-      <div class="text-[10px] text-amber-300 font-bold">Live &rarr;</div>
+      <div class="font-bold text-white font-mono text-xs sm:text-sm" id="tickerScoreSummary">0/0 (0.0 ov)</div>
+      <div class="flex items-center space-x-1 text-xs text-amber-300 font-bold">
+        <span>Live Center</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      </div>
     </div>
   </div>
 
-  <!-- Primary Dynamic Content Area (Mobile Container max-w-md) -->
-  <main id="appContent" class="flex-1 max-w-md w-full mx-auto p-3 pb-24 overflow-x-hidden"></main>
+  <!-- Primary Dynamic Content Area (Laptop/PC Full Screen Responsive max-w-7xl) -->
+  <main id="appContent" class="flex-1 w-full max-w-7xl mx-auto p-3 sm:p-5 md:p-6 pb-24 overflow-x-hidden"></main>
 
-  <!-- Simplified 4-Tab Bottom Navigation Bar -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#090F1C]/95 backdrop-blur-xl border-t border-slate-800/80 py-2 px-3 shadow-2xl">
-    <div class="max-w-md mx-auto grid grid-cols-4 gap-2">
-      <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center justify-center py-1 rounded-xl text-amber-400 transition-colors touch-target">
+  <!-- Responsive Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#090F1C]/95 backdrop-blur-xl border-t border-slate-800/80 py-2 px-4 shadow-2xl">
+    <div class="max-w-md md:max-w-xl mx-auto grid grid-cols-4 gap-2">
+      <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-amber-400 transition-colors touch-target">
         <i data-lucide="home" class="w-5 h-5"></i>
-        <span class="text-[10px] mt-1 font-bold">Home</span>
+        <span class="text-[10px] sm:text-[11px] mt-1 font-bold">Home</span>
       </button>
-      <button onclick="navigateTo('points')" id="nav-points" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
+      <button onclick="navigateTo('points')" id="nav-points" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
         <i data-lucide="table" class="w-5 h-5"></i>
-        <span class="text-[10px] mt-1 font-bold">Points</span>
+        <span class="text-[10px] sm:text-[11px] mt-1 font-bold">Points</span>
       </button>
-      <button onclick="navigateTo('awards')" id="nav-awards" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
+      <button onclick="navigateTo('awards')" id="nav-awards" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
         <i data-lucide="trophy" class="w-5 h-5"></i>
-        <span class="text-[10px] mt-1 font-bold">Leaderboard</span>
+        <span class="text-[10px] sm:text-[11px] mt-1 font-bold">Leaderboard</span>
       </button>
-      <button onclick="navigateTo('admin')" id="nav-admin" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
+      <button onclick="navigateTo('admin')" id="nav-admin" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-amber-400 transition-colors touch-target">
         <i data-lucide="shield-check" class="w-5 h-5"></i>
-        <span class="text-[10px] mt-1 font-bold">Admin</span>
+        <span class="text-[10px] sm:text-[11px] mt-1 font-bold">Admin</span>
       </button>
     </div>
   </nav>
 
   <!-- Modal Container -->
-  <div id="modalContainer" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 overflow-y-auto"></div>
+  <div id="modalContainer" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto"></div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500/60 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-2xl transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2 max-w-xs text-center">
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500/60 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-2xl transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2 max-w-sm text-center">
     <span id="toastMsg">Notification</span>
   </div>
 
@@ -179,10 +184,11 @@
      * TOURNAMENT REPOSITORY & CONSTANTS
      */
     
+    // Fixed: Lucide icon renderer without recursion
     function renderIcons() {
       if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
         try {
-          renderIcons();
+          lucide.createIcons();
         } catch (e) {
           console.warn("Lucide render error:", e);
         }
@@ -193,13 +199,13 @@
     const STORAGE_KEY = "NSL_S2_CRICKET_DATABASE_PRO_V1";
     const AUTH_STORAGE_KEY = "nsl_admin_authenticated";
     
-    // Persistent admin login state from localStorage
     let isAdmin = localStorage.getItem(AUTH_STORAGE_KEY) === "true";
     let navigationHistory = ['home'];
 
     // Leaderboard state
-    let currentLeaderboardTab = 'runs'; // 'runs', 'wickets', 'sixes', 'teams'
-    let currentLeaderboardTeam = 'KTG'; // 'KTG', 'ASK', 'NKG', 'ALW'
+    let currentLeaderboardTab = 'runs'; // 'runs', 'wickets', 'sixes', 'match', 'teams'
+    let currentLeaderboardTeam = 'KTG';
+    let currentLeaderboardMatchId = 1;
 
     // Firebase Config for nsl-s2 project
     const FIREBASE_CONFIG = {
@@ -294,6 +300,16 @@
       { id: 8, type: 'FINAL', name: 'Grand Final', subtitle: '1st Place vs Winner of Playoff', teamA: null, teamB: null, overs: 8, status: 'locked', result: null, scorecard: null }
     ];
 
+    const INITIAL_RULES = [
+      "1. Matches are played with tape-ball, 8 overs per side.",
+      "2. Strict Bowler Limit: Maximum 2.0 overs per bowler. No bowler can bowl consecutive overs.",
+      "3. Super Ball Rule: Batting side can call 1 Super Ball between Overs 2.0 and 6.6. Runs off the bat are DOUBLED (2x). If batsman gets OUT, a penalty of -5 RUNS is deducted from total.",
+      "4. Extras: Wide (+1 run) and No-Ball (+1 run with Free Hit). Byes & Leg-byes are not counted (strict bat/boundary runs only).",
+      "5. Free Hit: Dismissal is Run Out only. If a Super Ball is bowled on a Free Hit and batsman is caught/bowled, it is Not Out but -5 runs are deducted.",
+      "6. Playing 11: Exactly 11 players must be selected per team before the coin toss.",
+      "7. Tournament Progression: Top team in group goes directly to Grand Final. 2nd and 3rd place play the Knockout Playoff."
+    ];
+
     let AppState = {
       currentView: 'home',
       teams: JSON.parse(JSON.stringify(INITIAL_TEAMS)),
@@ -301,15 +317,7 @@
       playerStats: {},
       liveMatch: null,
       lastBroadcast: null,
-      rules: [
-        "1. Matches are played with tape-ball, 8 overs per side.",
-        "2. Strict Bowler Limit: Maximum 2.0 overs per bowler. No bowler can bowl consecutive overs.",
-        "3. Super Ball Rule: Batting side can call 1 Super Ball between Overs 2.0 and 6.6. Runs off the bat are DOUBLED (2x). If batsman gets OUT, a penalty of -5 RUNS is deducted from total.",
-        "4. Extras: Wide (+1 run) and No-Ball (+1 run with Free Hit). Byes & Leg-byes are not counted (strict bat/boundary runs only).",
-        "5. Free Hit: Dismissal is Run Out only. If a Super Ball is bowled on a Free Hit and batsman is caught/bowled, it is Not Out but -5 runs are deducted.",
-        "6. Playing 11: Exactly 11 players must be selected per team before the coin toss.",
-        "7. Tournament Progression: Top team in group goes directly to Grand Final. 2nd and 3rd place play the Knockout Playoff."
-      ],
+      rules: [...INITIAL_RULES],
       updatedAt: Date.now()
     };
 
@@ -484,7 +492,7 @@
             src="nsl_s2_logo.png" 
             alt="NSL S2" 
             class="${sizeClasses} object-contain drop-shadow"
-            onerror="this.onerror=null; this.outerHTML='<div class=\\'${sizeClasses} rounded-xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-300 p-0.5 shadow-md flex items-center justify-center\\'><div class=\\'w-full h-full bg-[#0D1424] rounded-[10px] flex items-center justify-center font-black text-amber-400 text-xs font-display tracking-wider\\'>NSL</div></div>';"
+            onerror="this.onerror=null; this.outerHTML='<div class=\\'${sizeClasses} rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-300 p-0.5 shadow-md flex items-center justify-center\\'><div class=\\'w-full h-full bg-[#0D1424] rounded-[14px] flex items-center justify-center font-black text-amber-400 text-sm font-display tracking-wider\\'>NSL</div></div>';"
           />
         </div>
       `;
@@ -625,7 +633,7 @@
       AppState.currentView = view;
       window.scrollTo(0, 0);
 
-      // Bottom nav updates (only 4 primary tabs)
+      // Bottom nav updates (4 primary tabs)
       document.querySelectorAll('nav button').forEach(b => {
         b.classList.remove('text-amber-400');
         b.classList.add('text-slate-400');
@@ -668,14 +676,14 @@
 
     function renderScreenHeader(title, subtitle = '') {
       return `
-        <div class="flex items-center justify-between mb-3.5 pb-2 border-b border-slate-800/80">
-          <button onclick="navigateBack()" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 touch-target">
+        <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-800/80">
+          <button onclick="navigateBack()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 touch-target">
             <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
             <span>Back</span>
           </button>
           <div class="text-right">
-            <h2 class="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">${title}</h2>
-            ${subtitle ? `<span class="text-[10px] text-slate-400 font-semibold">${subtitle}</span>` : ''}
+            <h2 class="font-display text-2xl sm:text-3xl font-black text-white uppercase tracking-wider leading-none">${title}</h2>
+            ${subtitle ? `<span class="text-[10px] sm:text-xs text-slate-400 font-semibold">${subtitle}</span>` : ''}
           </div>
         </div>
       `;
@@ -704,7 +712,7 @@
     }
 
     /**
-     * SCREEN 1: HOME (Mobile Symmetrical Layout)
+     * SCREEN 1: HOME (Responsive Full Width + 2 per Row Square Boxes)
      */
     function renderHomeLiveMatchCard(live) {
       const inn = live.currentInnings === 1 ? live.innings1 : live.innings2;
@@ -717,33 +725,35 @@
       const bowler = inn.bowlers[inn.currentBowler] || { name: inn.currentBowler, runs: 0, wickets: 0 };
 
       return `
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-950/40 via-[#0E1528] to-slate-900 border-2 border-red-500/50 p-4 shadow-xl">
-          <div class="flex items-center justify-between mb-2">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-950/40 via-[#0E1528] to-slate-900 border-2 border-red-500/50 p-4 sm:p-5 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
             <div class="flex items-center space-x-2">
               <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-              <span class="text-xs font-black text-red-400 uppercase tracking-widest">LIVE MATCH</span>
+              <span class="text-xs sm:text-sm font-black text-red-400 uppercase tracking-widest">LIVE MATCH</span>
             </div>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono font-bold">Innings ${live.currentInnings}</span>
+            <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono font-bold">Innings ${live.currentInnings}</span>
           </div>
 
           <div class="flex items-center justify-between py-2">
-            <div class="flex items-center space-x-3">
-              ${renderTeamLogo(inn.battingTeam, "w-12 h-12")}
+            <div class="flex items-center space-x-3 sm:space-x-4">
+              ${renderTeamLogo(inn.battingTeam, "w-12 h-12 sm:w-16 sm:h-16")}
               <div>
-                <div class="font-display text-4xl font-black text-white leading-none">${inn.runs}/${inn.wickets}</div>
-                <div class="text-xs font-bold text-amber-400 mt-1">${batTeam?.name} (${ov}/${live.totalOvers} ov)</div>
+                <div class="font-display text-4xl sm:text-5xl font-black text-white leading-none">${inn.runs}/${inn.wickets}</div>
+                <div class="text-xs sm:text-sm font-bold text-amber-400 mt-1">${batTeam?.name} (${ov}/${live.totalOvers} ov)</div>
               </div>
             </div>
 
             <div class="text-right">
-              <div class="text-[11px] text-slate-300 font-bold">${striker.name}*: <span class="text-amber-400 font-mono font-black">${striker.runs}</span> (${striker.balls}b)</div>
-              <div class="text-[11px] text-slate-400 mt-0.5">${bowler.name}: <span class="text-emerald-400 font-mono font-black">${bowler.wickets}/${bowler.runs}</span></div>
-              <div class="text-[10px] text-slate-500 mt-0.5 font-bold">vs ${bowlTeam?.shortName}</div>
+              <div class="text-xs sm:text-sm text-slate-300 font-bold">${striker.name}*: <span class="text-amber-400 font-mono font-black">${striker.runs}</span> (${striker.balls}b)</div>
+              <div class="text-xs sm:text-sm text-slate-400 mt-0.5">${bowler.name}: <span class="text-emerald-400 font-mono font-black">${bowler.wickets}/${bowler.runs}</span></div>
+              <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 font-bold">vs ${bowlTeam?.shortName}</div>
             </div>
           </div>
 
-          <button onclick="navigateTo('live')" class="w-full mt-3 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-1.5 touch-target">
-            <i data-lucide="radio" class="w-4 h-4"></i> Enter Match Center &rarr;
+          <button onclick="navigateTo('live')" class="w-full mt-3 py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2 touch-target">
+            <i data-lucide="radio" class="w-4 h-4"></i>
+            <span>Enter Match Center</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </div>
       `;
@@ -754,157 +764,183 @@
       const nextFixture = AppState.fixtures.find(f => f.status === 'unlocked' && !f.result && (!live || f.id !== live.fixtureId));
 
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4 sm:space-y-6">
           <!-- Top NSL S2 Logo Header Banner -->
-          <div class="rounded-3xl bg-gradient-to-b from-[#131E35] via-[#0D1424] to-[#070B12] border border-amber-500/30 p-4 shadow-xl flex flex-col items-center text-center relative overflow-hidden">
-            <div class="w-16 h-16 mb-2">
-              ${renderLeagueLogo("w-16 h-16")}
+          <div class="rounded-3xl bg-gradient-to-b from-[#131E35] via-[#0D1424] to-[#070B12] border border-amber-500/30 p-5 sm:p-6 shadow-xl flex flex-col items-center text-center relative overflow-hidden">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 mb-2">
+              ${renderLeagueLogo("w-16 h-16 sm:w-20 sm:h-20")}
             </div>
-            <h1 class="font-display text-3xl font-black text-white tracking-wider leading-none uppercase">
+            <h1 class="font-display text-3xl sm:text-5xl font-black text-white tracking-wider leading-none uppercase">
               NAWAB SUPER LEAGUE S2
             </h1>
-            <p class="text-[11px] text-amber-400 font-semibold tracking-wide mt-1">Official Tape-Ball Championship Portal</p>
+            <p class="text-xs sm:text-sm text-amber-400 font-semibold tracking-wide mt-1.5">Official Tape-Ball Championship Portal</p>
           </div>
 
-          <!-- Running Match Card -->
+          <!-- Running Match or Upcoming Match Banner -->
           ${live && live.status === 'live' ? renderHomeLiveMatchCard(live) : ''}
 
-          <!-- Upcoming Match Card -->
           ${(!live || live.status !== 'live') && nextFixture ? `
-            <div class="bg-gradient-to-br from-slate-900 to-[#0F172A] border border-slate-800 rounded-3xl p-4 shadow-xl">
+            <div class="bg-gradient-to-br from-slate-900 to-[#0F172A] border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl">
               <div class="flex items-center justify-between mb-2.5">
-                <div class="flex items-center space-x-1.5">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                  <span class="text-xs font-black uppercase tracking-wider text-amber-400">Upcoming Match</span>
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-400">Upcoming Match</span>
                 </div>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-bold">${nextFixture.name}</span>
+                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold">${nextFixture.name}</span>
               </div>
 
               <div class="flex items-center justify-between py-2">
-                <div class="flex items-center space-x-2.5">
-                  ${renderTeamLogo(nextFixture.teamA, "w-10 h-10")}
+                <div class="flex items-center space-x-3">
+                  ${renderTeamLogo(nextFixture.teamA, "w-10 h-10 sm:w-14 sm:h-14")}
                   <div>
-                    <div class="font-bold text-xs text-white">${AppState.teams[nextFixture.teamA]?.name || nextFixture.teamA}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">${nextFixture.teamA}</div>
+                    <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[nextFixture.teamA]?.name || nextFixture.teamA}</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">${nextFixture.teamA}</div>
                   </div>
                 </div>
 
-                <div class="font-display text-xl font-black text-amber-400/80 px-2">VS</div>
+                <div class="font-display text-2xl sm:text-3xl font-black text-amber-400/80 px-2">VS</div>
 
-                <div class="flex items-center space-x-2.5 text-right">
+                <div class="flex items-center space-x-3 text-right">
                   <div>
-                    <div class="font-bold text-xs text-white">${AppState.teams[nextFixture.teamB]?.name || nextFixture.teamB}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">${nextFixture.teamB}</div>
+                    <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[nextFixture.teamB]?.name || nextFixture.teamB}</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">${nextFixture.teamB}</div>
                   </div>
-                  ${renderTeamLogo(nextFixture.teamB, "w-10 h-10")}
+                  ${renderTeamLogo(nextFixture.teamB, "w-10 h-10 sm:w-14 sm:h-14")}
                 </div>
               </div>
 
-              <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 flex items-center justify-between">
-                <div class="text-[10px] text-slate-400 font-medium">8 Overs • Max 2 Overs / Bowler</div>
+              <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                <div class="text-[10px] sm:text-xs text-slate-400 font-medium">8 Overs • Max 2 Overs / Bowler</div>
                 ${isAdmin ? `
-                  <button onclick="launchMatchSetup(${nextFixture.id})" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black uppercase tracking-wider touch-target">
+                  <button onclick="launchMatchSetup(${nextFixture.id})" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-black uppercase tracking-wider touch-target">
                     Start Match
                   </button>
                 ` : `
-                  <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Scheduled</span>
+                  <span class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Scheduled</span>
                 `}
               </div>
             </div>
           ` : ''}
 
-          <!-- 5 Main Navigation Tiles (Clean & Seamless for Spectators) -->
-          <div class="space-y-2 pt-1">
+          <!-- TOURNAMENT NAVIGATION: SQUARE BOXES (TWO PER ROW WITH ICONS) -->
+          <div class="space-y-3 pt-2">
             <div class="flex items-center justify-between px-1">
-              <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Tournament Navigation</h3>
+              <h3 class="text-xs sm:text-sm font-black text-slate-400 uppercase tracking-wider">Tournament Navigation</h3>
+              <span class="text-[10px] sm:text-xs text-slate-500">Official Modules</span>
             </div>
-            <div class="grid grid-cols-1 gap-2">
+
+            <!-- Square Boxes: 2 per row (grid-cols-2) on all devices -->
+            <div class="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
               
-              <!-- 1: Live match center -->
-              <button onclick="navigateTo('live')" class="p-3.5 rounded-2xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 text-left transition-all flex items-center justify-between touch-target">
-                <div class="flex items-center space-x-3">
-                  <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="radio" class="w-4 h-4"></i>
+              <!-- 1. Live Match Center -->
+              <button onclick="navigateTo('live')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-red-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="radio" class="w-6 h-6"></i>
                   </div>
-                  <div>
-                    <div class="text-xs font-bold text-white">1. Live Match Center</div>
-                    <div class="text-[10px] text-slate-400">Real-time scorecard, RRR, predictor</div>
-                  </div>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-red-400 transition-colors"></i>
                 </div>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-red-400 block mb-0.5">Real-Time</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Live Center</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">Scorecard, RRR, ball-by-ball</p>
+                </div>
               </button>
 
-              <!-- 2: Fixtures -->
-              <button onclick="navigateTo('fixtures')" class="p-3.5 rounded-2xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 text-left transition-all flex items-center justify-between touch-target">
-                <div class="flex items-center space-x-3">
-                  <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
+              <!-- 2. Fixtures & Schedule -->
+              <button onclick="navigateTo('fixtures')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-blue-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="calendar" class="w-6 h-6"></i>
                   </div>
-                  <div>
-                    <div class="text-xs font-bold text-white">2. Fixtures & Schedule</div>
-                    <div class="text-[10px] text-slate-400">8 matches: Group stage & playoffs</div>
-                  </div>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors"></i>
                 </div>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Schedule</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Fixtures</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">8 matches, group stage & playoffs</p>
+                </div>
               </button>
 
-              <!-- 3: Squads (Seamless for Spectators; Admin sees register button) -->
-              <div class="p-3.5 rounded-2xl bg-[#0D1424] border border-slate-800 flex flex-col justify-between space-y-2">
-                <div class="flex items-center justify-between cursor-pointer" onclick="navigateTo('squads')">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
-                      <i data-lucide="users" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                      <div class="text-xs font-bold text-white">3. Squads & Teams</div>
-                      <div class="text-[10px] text-slate-400">Official team rosters & individual stats</div>
-                    </div>
+              <!-- 3. Points Table -->
+              <button onclick="navigateTo('points')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-amber-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="table" class="w-6 h-6"></i>
                   </div>
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-amber-400 transition-colors"></i>
                 </div>
-
-                ${isAdmin ? `
-                  <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
-                    <span class="text-[10px] text-slate-400 font-semibold">Admin: Add New Player</span>
-                    <button onclick="openQuickRegisterModal()" class="px-2.5 py-1 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] uppercase tracking-wide flex items-center gap-1 touch-target">
-                      <i data-lucide="user-plus" class="w-3 h-3"></i> Register
-                    </button>
-                  </div>
-                ` : ''}
-              </div>
-
-              <!-- 4: Match Results -->
-              <button onclick="navigateTo('results')" class="p-3.5 rounded-2xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 text-left transition-all flex items-center justify-between touch-target">
-                <div class="flex items-center space-x-3">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="check-check" class="w-4 h-4"></i>
-                  </div>
-                  <div>
-                    <div class="text-xs font-bold text-white">4. Match Results</div>
-                    <div class="text-[10px] text-slate-400">Scorecard archives & WhatsApp summaries</div>
-                  </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-0.5">Standings</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Points Table</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">Rankings, NRR & qualification</p>
                 </div>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
               </button>
 
-              <!-- 5: Rules (Spectator read-only, Admin can edit) -->
-              <button onclick="navigateTo('rules')" class="p-3.5 rounded-2xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 text-left transition-all flex items-center justify-between touch-target">
-                <div class="flex items-center space-x-3">
-                  <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="book-open" class="w-4 h-4"></i>
+              <!-- 4. Leaderboard & Stats -->
+              <button onclick="navigateTo('awards')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-purple-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="trophy" class="w-6 h-6"></i>
                   </div>
-                  <div>
-                    <div class="text-xs font-bold text-white flex items-center gap-1.5">
-                      <span>5. Tournament Rules</span>
-                      ${isAdmin ? '<span class="px-1.5 py-0.2 text-[9px] rounded bg-amber-500/20 text-amber-400 font-bold border border-amber-500/40">Edit</span>' : ''}
-                    </div>
-                    <div class="text-[10px] text-slate-400">Superball, bowler quotas, tape-ball conditions</div>
-                  </div>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-purple-400 transition-colors"></i>
                 </div>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 block mb-0.5">Top Players</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Leaderboard</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">Per-match MVP, runs & wickets</p>
+                </div>
+              </button>
+
+              <!-- 5. Squads & Teams -->
+              <button onclick="navigateTo('squads')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-emerald-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                  </div>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-0.5">Franchises</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Squads</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">4 teams & player profiles</p>
+                </div>
+              </button>
+
+              <!-- 6. Match Results & Rules -->
+              <button onclick="navigateTo('results')" class="aspect-square p-4 sm:p-5 rounded-3xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 hover:border-teal-500/50 flex flex-col justify-between text-left transition-all group shadow-xl touch-target">
+                <div class="flex items-center justify-between w-full">
+                  <div class="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i data-lucide="check-check" class="w-6 h-6"></i>
+                  </div>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-600 group-hover:text-teal-400 transition-colors"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-teal-400 block mb-0.5">Archive</span>
+                  <div class="font-display text-xl sm:text-2xl font-black text-white uppercase leading-none">Results</div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-2">Completed games & WhatsApp share</p>
+                </div>
               </button>
 
             </div>
+
+            <!-- Tournament Rules Quick Access Bar -->
+            <button onclick="navigateTo('rules')" class="w-full mt-2 p-3.5 rounded-2xl bg-[#0D1424] hover:bg-[#141E34] border border-slate-800 text-left transition-all flex items-center justify-between touch-target">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="book-open" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Tournament Official Rules</span>
+                    ${isAdmin ? '<span class="px-1.5 py-0.2 text-[9px] rounded bg-amber-500/20 text-amber-400 font-bold border border-amber-500/40">Edit</span>' : ''}
+                  </div>
+                  <div class="text-[10px] text-slate-400">Super Ball, bowler limit & tape-ball guidelines</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+            </button>
+
           </div>
         </div>
       `;
@@ -915,26 +951,28 @@
      */
     function renderRulesScreen(container) {
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Tournament Rules', 'NSL S2 Official Guidelines')}
 
-          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 shadow-xl space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Official Regulations
+          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 sm:p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span class="text-xs sm:text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Official Tape-Ball Regulations</span>
               </span>
               ${isAdmin ? `
-                <button onclick="openEditRulesModal()" class="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-[11px] uppercase flex items-center gap-1 shadow touch-target">
-                  <i data-lucide="edit-3" class="w-3 h-3"></i> Edit Rules
+                <button onclick="openEditRulesModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase flex items-center gap-1.5 shadow touch-target">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>Edit Rules</span>
                 </button>
               ` : `
-                <span class="text-[10px] text-slate-500 font-bold">Official</span>
+                <span class="text-[10px] sm:text-xs text-slate-500 font-bold">Official</span>
               `}
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2.5">
               ${AppState.rules.map((rule, idx) => `
-                <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800/80 text-xs text-slate-200 leading-relaxed font-medium">
+                <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800/80 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
                   ${rule}
                 </div>
               `).join('')}
@@ -948,13 +986,13 @@
       if (!isAdmin) return;
       const modal = document.getElementById('modalContainer');
       modal.innerHTML = `
-        <div class="bg-[#0F172A] border border-amber-500/50 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl">
+        <div class="bg-[#0F172A] border border-amber-500/50 rounded-3xl p-5 sm:p-6 max-w-lg w-full space-y-4 shadow-2xl">
           <div class="text-center">
-            <h3 class="text-sm font-black text-white uppercase tracking-wider">Edit Tournament Rules</h3>
+            <h3 class="text-base font-black text-white uppercase tracking-wider">Edit Tournament Rules</h3>
             <p class="text-xs text-slate-400 mt-0.5">Write one rule per line</p>
           </div>
-          <textarea id="rulesTextArea" rows="9" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-3 text-xs text-white leading-relaxed font-mono focus:outline-none focus:border-amber-500">${AppState.rules.join('\n')}</textarea>
-          <div class="flex items-center space-x-2">
+          <textarea id="rulesTextArea" rows="9" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-3.5 text-xs sm:text-sm text-white leading-relaxed font-mono focus:outline-none focus:border-amber-500">${AppState.rules.join('\n')}</textarea>
+          <div class="flex items-center space-x-2 pt-1">
             <button onclick="closeModal()" class="w-1/3 py-2.5 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold touch-target">Cancel</button>
             <button onclick="saveCustomRules()" class="w-2/3 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase touch-target">Save Rules</button>
           </div>
@@ -1025,7 +1063,28 @@
     }
 
     /**
-     * SCREEN 2: LIVE MATCH & MAIN SCORECARD (SYMMETRICAL, ZERO EMOJIS, EASY FOR SCORER)
+     * DELETE PLAYER (ADMIN ONLY)
+     */
+    function deletePlayer(teamId, playerName) {
+      if (!isAdmin) {
+        showToast("Admin authorization required!");
+        return;
+      }
+
+      if (confirm(`Are you sure you want to delete "${playerName}" from ${teamId}?`)) {
+        const team = AppState.teams[teamId];
+        if (team) {
+          team.squad = team.squad.filter(p => p !== playerName);
+          delete AppState.playerStats[playerName];
+          showToast(`${playerName} removed from ${teamId}.`);
+          syncData();
+          refreshCurrentView();
+        }
+      }
+    }
+
+    /**
+     * SCREEN 2: LIVE MATCH & MAIN SCORECARD (RESPONSIVE GRID FOR PC)
      */
     function renderLiveScorerScreen(container) {
       const match = AppState.liveMatch;
@@ -1033,16 +1092,16 @@
       if (!match || match.status !== 'live') {
         container.innerHTML = `
           ${renderScreenHeader('Live Match')}
-          <div class="py-16 text-center space-y-3.5">
-            <div class="w-14 h-14 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto text-slate-500">
-              <i data-lucide="radio" class="w-6 h-6"></i>
+          <div class="py-16 text-center space-y-4 max-w-md mx-auto">
+            <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto text-slate-500">
+              <i data-lucide="radio" class="w-8 h-8"></i>
             </div>
-            <h2 class="text-base font-bold text-white uppercase tracking-wider">No Active Match</h2>
-            <p class="text-xs text-slate-400 max-w-xs mx-auto">
+            <h2 class="text-base sm:text-lg font-bold text-white uppercase tracking-wider">No Active Match</h2>
+            <p class="text-xs sm:text-sm text-slate-400">
               ${isAdmin ? 'Go to Fixtures to select Playing 11, complete the toss, and launch the match.' : 'No match is currently in progress. Scores will sync live here once commenced.'}
             </p>
             ${isAdmin ? `
-              <button onclick="navigateTo('fixtures')" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg touch-target">
+              <button onclick="navigateTo('fixtures')" class="px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg touch-target">
                 Fixtures & Start
               </button>
             ` : ''}
@@ -1096,300 +1155,306 @@
       const superBallEligible = currentOverNumber >= 2 && currentOverNumber <= 7 && !inn.superBallUsed;
 
       container.innerHTML = `
-        <div class="space-y-3">
+        <div class="space-y-4">
           ${renderScreenHeader(`Match ${match.fixtureId}`, `Innings ${match.currentInnings}`)}
 
-          <!-- MAIN SYMMETRICAL SCORECARD CARD (NO EMOJIS) -->
-          <div class="rounded-3xl bg-gradient-to-b from-[#111A2E] to-[#0A101D] border border-slate-800 p-4 shadow-xl space-y-3">
+          <!-- Responsive Two-Column Layout on Laptop/PC -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            <!-- Teams Header: Batting (Left) vs Bowling (Right) -->
-            <div class="grid grid-cols-2 gap-2 items-center pb-2.5 border-b border-slate-800/80">
-              <!-- Batting Team (Left) -->
-              <div class="flex items-center space-x-2">
-                ${renderTeamLogo(inn.battingTeam, "w-10 h-10")}
-                <div class="overflow-hidden">
-                  <span class="text-[9px] uppercase font-black text-amber-400 tracking-wider block">Batting</span>
-                  <span class="font-bold text-xs text-white truncate block">${batTeam?.name || inn.battingTeam}</span>
+            <!-- Left Column: Metrics, Crease, Tables (col-span-7) -->
+            <div class="lg:col-span-7 space-y-4">
+              <!-- MAIN SCORECARD -->
+              <div class="rounded-3xl bg-gradient-to-b from-[#111A2E] to-[#0A101D] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3.5">
+                
+                <!-- Teams Header: Batting (Left) vs Bowling (Right) -->
+                <div class="grid grid-cols-2 gap-2 items-center pb-3 border-b border-slate-800/80">
+                  <div class="flex items-center space-x-2.5">
+                    ${renderTeamLogo(inn.battingTeam, "w-10 h-10 sm:w-12 sm:h-12")}
+                    <div class="overflow-hidden">
+                      <span class="text-[9px] sm:text-[10px] uppercase font-black text-amber-400 tracking-wider block">Batting</span>
+                      <span class="font-bold text-xs sm:text-sm text-white truncate block">${batTeam?.name || inn.battingTeam}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-end space-x-2.5 text-right">
+                    <div class="overflow-hidden">
+                      <span class="text-[9px] sm:text-[10px] uppercase font-black text-slate-400 tracking-wider block">Bowling</span>
+                      <span class="font-bold text-xs sm:text-sm text-white truncate block">${bowlTeam?.name || inn.bowlingTeam}</span>
+                    </div>
+                    ${renderTeamLogo(inn.bowlingTeam, "w-10 h-10 sm:w-12 sm:h-12")}
+                  </div>
                 </div>
+
+                <!-- 3-Column Metrics Dashboard -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
+                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">Score</span>
+                    <span class="font-display text-4xl sm:text-5xl font-black text-white leading-none block mt-1">${inn.runs}/${inn.wickets}</span>
+                  </div>
+
+                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
+                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">Overs</span>
+                    <span class="font-display text-4xl sm:text-5xl font-black text-amber-400 leading-none block mt-1">${ovFormatted}</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold block">of ${match.totalOvers}.0</span>
+                  </div>
+
+                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
+                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">${match.currentInnings === 2 ? 'Target' : 'CRR'}</span>
+                    <span class="font-display text-3xl sm:text-4xl font-black text-emerald-400 leading-none block mt-1">${match.currentInnings === 2 ? target : crr}</span>
+                    ${match.currentInnings === 2 ? `<span class="text-[9px] sm:text-[10px] text-amber-300 font-mono font-bold block">Req: ${rrr}</span>` : `<span class="text-[9px] sm:text-[10px] text-slate-500 font-bold block">Runs/Over</span>`}
+                  </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="flex items-center justify-center gap-2 flex-wrap pt-1">
+                  ${inn.isFreeHit ? `
+                    <span class="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500 text-red-300 text-[10px] sm:text-xs font-black uppercase tracking-wider animate-pulse">
+                      Free Hit Active
+                    </span>
+                  ` : ''}
+                  ${inn.isSuperBallActive ? `
+                    <span class="px-2.5 py-0.5 rounded-full bg-purple-600/30 border border-purple-500 text-purple-300 text-[10px] sm:text-xs font-black uppercase tracking-wider animate-bounce">
+                      Super Ball Active (2x Runs / -5 Out)
+                    </span>
+                  ` : !inn.superBallUsed ? `
+                    <span class="px-2.5 py-0.5 rounded-full bg-purple-950/40 border border-purple-800 text-purple-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      Super Ball Available
+                    </span>
+                  ` : `
+                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      Super Ball Used
+                    </span>
+                  `}
+                  <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-[10px] sm:text-xs font-mono font-bold">
+                    Extras: ${inn.extras.wides} WD, ${inn.extras.noBalls} NB
+                  </span>
+                </div>
+
+                <!-- Win Predictor Bar -->
+                ${match.currentInnings === 2 ? `
+                  <div class="pt-2 border-t border-slate-800/80 space-y-1">
+                    <div class="flex justify-between text-[10px] sm:text-xs font-black uppercase tracking-wider">
+                      <span class="text-amber-400">${inn.battingTeam}: Need ${needed > 0 ? needed : 0} in ${ballsRemaining}b</span>
+                      <span class="text-slate-400">Win: ${winProbA}%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
+                      <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500" style="width: ${winProbA}%"></div>
+                      <div class="h-full bg-slate-700 transition-all duration-500" style="width: ${winProbB}%"></div>
+                    </div>
+                  </div>
+                ` : ''}
               </div>
 
-              <!-- Bowling Team (Right) -->
-              <div class="flex items-center justify-end space-x-2 text-right">
-                <div class="overflow-hidden">
-                  <span class="text-[9px] uppercase font-black text-slate-400 tracking-wider block">Bowling</span>
-                  <span class="font-bold text-xs text-white truncate block">${bowlTeam?.name || inn.bowlingTeam}</span>
+              <!-- AT THE CREASE -->
+              <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 space-y-3 shadow-xl">
+                <div class="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-wider px-1">Active Batters & Bowler</div>
+
+                <!-- Striker -->
+                <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-between">
+                  <div class="truncate mr-2">
+                    <div class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      <span class="truncate">${striker.name}</span>
+                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-black uppercase">Strike</span>
+                    </div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
+                      ${striker.fours} 4s • ${striker.sixes} 6s • SR: ${striker.balls > 0 ? ((striker.runs / striker.balls) * 100).toFixed(1) : "0.0"}
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="font-mono text-2xl font-black text-white">${striker.runs}</span>
+                    <span class="text-[10px] sm:text-xs text-slate-400 font-mono block">(${striker.balls}b)</span>
+                  </div>
                 </div>
-                ${renderTeamLogo(inn.bowlingTeam, "w-10 h-10")}
+
+                <!-- Non-Striker -->
+                <div class="p-3 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+                  <div class="truncate mr-2">
+                    <div class="text-xs sm:text-sm font-bold text-slate-200 truncate">
+                      ${nonStriker.name}
+                    </div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
+                      ${nonStriker.fours} 4s • ${nonStriker.sixes} 6s • SR: ${nonStriker.balls > 0 ? ((nonStriker.runs / nonStriker.balls) * 100).toFixed(1) : "0.0"}
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="font-mono text-xl font-bold text-slate-300">${nonStriker.runs}</span>
+                    <span class="text-[10px] sm:text-xs text-slate-500 font-mono block">(${nonStriker.balls}b)</span>
+                  </div>
+                </div>
+
+                <!-- Bowler -->
+                <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-between">
+                  <div class="truncate mr-2">
+                    <div class="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      <span class="truncate">${bowler.name}</span>
+                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase">Bowling</span>
+                    </div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
+                      Econ: ${bowler.balls > 0 ? ((bowler.runs / bowler.balls) * 6).toFixed(1) : "0.0"} • Maidens: ${bowler.maidens || 0}
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="font-mono text-2xl font-black text-emerald-400">${bowler.wickets}/${bowler.runs}</span>
+                    <span class="text-[10px] sm:text-xs text-slate-400 font-mono block">(${bowlerOv}/2.0 ov)</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Symmetrical 3-Column Metrics Dashboard -->
-            <div class="grid grid-cols-3 gap-2 text-center">
-              <!-- Box 1: Runs / Wickets -->
-              <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider block">Score</span>
-                <span class="font-display text-4xl font-black text-white leading-none block mt-0.5">${inn.runs}/${inn.wickets}</span>
+            <!-- Right Column: Timeline, Controls & In-Game Scorecard (col-span-5) -->
+            <div class="lg:col-span-5 space-y-4">
+              <!-- TIMELINE -->
+              <div class="bg-slate-900/70 border border-slate-800 rounded-3xl p-4">
+                <div class="flex items-center justify-between mb-2.5">
+                  <span class="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-wider">Over ${currentOverNumber}.x Timeline</span>
+                  <span class="text-[10px] sm:text-xs text-slate-500 font-mono">Last 8 deliveries</span>
+                </div>
+                <div class="flex items-center space-x-2 overflow-x-auto pb-1" id="currentOverBalls">
+                  ${renderTimelineBalls(inn.timeline.slice(-8))}
+                </div>
               </div>
 
-              <!-- Box 2: Overs -->
-              <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider block">Overs</span>
-                <span class="font-display text-4xl font-black text-amber-400 leading-none block mt-0.5">${ovFormatted}</span>
-                <span class="text-[9px] text-slate-500 font-bold block">of ${match.totalOvers}.0</span>
-              </div>
+              <!-- SCORER CONTROLS (ADMIN ONLY) -->
+              ${isAdmin ? `
+                <div class="bg-[#0E1528] border border-amber-500/40 rounded-3xl p-4 space-y-3 shadow-2xl">
+                  <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-400">
+                    <span class="text-amber-400 flex items-center gap-1.5">
+                      <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                      <span>Scorer Controls</span>
+                    </span>
+                    <span>Undo History (${inn.history ? inn.history.length : 0}/16)</span>
+                  </div>
 
-              <!-- Box 3: CRR / Target -->
-              <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider block">${match.currentInnings === 2 ? 'Target' : 'CRR'}</span>
-                <span class="font-display text-3xl font-black text-emerald-400 leading-none block mt-0.5">${match.currentInnings === 2 ? target : crr}</span>
-                ${match.currentInnings === 2 ? `<span class="text-[9px] text-amber-300 font-mono font-bold block">Req: ${rrr}</span>` : `<span class="text-[9px] text-slate-500 font-bold block">Runs/Over</span>`}
-              </div>
-            </div>
+                  <!-- Actions -->
+                  <div class="grid grid-cols-3 gap-2">
+                    <button 
+                      onclick="triggerSuperBallCall()" 
+                      ${!superBallEligible || inn.isSuperBallActive ? 'disabled' : ''}
+                      class="py-3 px-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all border touch-target ${
+                        inn.isSuperBallActive 
+                          ? 'bg-purple-600 border-purple-400 text-white animate-pulse' 
+                          : superBallEligible 
+                            ? 'bg-purple-950/80 border-purple-600 text-purple-200 hover:bg-purple-900' 
+                            : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
+                      }">
+                      ${inn.isSuperBallActive ? 'Superball ON' : 'Super Ball'}
+                    </button>
 
-            <!-- Match Condition Badges (Symmetrical, Clean Text, No Emojis) -->
-            <div class="flex items-center justify-center gap-1.5 flex-wrap pt-0.5">
-              ${inn.isFreeHit ? `
-                <span class="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500 text-red-300 text-[10px] font-black uppercase tracking-wider animate-pulse">
-                  Free Hit Active
-                </span>
-              ` : ''}
-              ${inn.isSuperBallActive ? `
-                <span class="px-2.5 py-0.5 rounded-full bg-purple-600/30 border border-purple-500 text-purple-300 text-[10px] font-black uppercase tracking-wider animate-bounce">
-                  Super Ball Active (2x Runs / -5 Out)
-                </span>
-              ` : !inn.superBallUsed ? `
-                <span class="px-2.5 py-0.5 rounded-full bg-purple-950/40 border border-purple-800 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
-                  Super Ball Available
-                </span>
+                    <button onclick="swapStrikeManual()" class="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider border border-slate-700 transition-all touch-target">
+                      Swap Strike
+                    </button>
+
+                    <button onclick="openRetireModal()" class="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider border border-slate-700 transition-all touch-target">
+                      Retire Out
+                    </button>
+                  </div>
+
+                  <!-- Runs Grid -->
+                  <div class="grid grid-cols-3 gap-2.5">
+                    <button onclick="recordDelivery({ runs: 0 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-2xl font-mono border border-slate-700 shadow touch-target">0</button>
+                    <button onclick="recordDelivery({ runs: 1 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">1</button>
+                    <button onclick="recordDelivery({ runs: 2 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">2</button>
+                    <button onclick="recordDelivery({ runs: 3 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">3</button>
+                    <button onclick="recordDelivery({ runs: 4, isBoundary: true })" class="py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-2xl font-mono shadow-md border border-blue-400 touch-target">4</button>
+                    <button onclick="recordDelivery({ runs: 6, isBoundary: true })" class="py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-2xl font-mono shadow-md border border-amber-300 touch-target">6</button>
+                  </div>
+
+                  <!-- Extras, Wicket & Undo -->
+                  <div class="grid grid-cols-4 gap-2 pt-1">
+                    <button onclick="recordDelivery({ isWide: true })" class="py-3 rounded-xl bg-yellow-600/25 hover:bg-yellow-600/35 border border-yellow-500/50 text-yellow-300 font-black text-xs uppercase touch-target">
+                      WD (+1)
+                    </button>
+                    <button onclick="recordDelivery({ isNoBall: true })" class="py-3 rounded-xl bg-orange-600/25 hover:bg-orange-600/35 border border-orange-500/50 text-orange-300 font-black text-xs uppercase touch-target">
+                      NB (+1)
+                    </button>
+                    <button onclick="openWicketModal()" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase border border-rose-400 shadow-md touch-target">
+                      WICKET
+                    </button>
+                    <button onclick="undoLastDelivery()" ${!inn.history || inn.history.length === 0 ? 'disabled' : ''} class="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase border border-slate-700 touch-target ${!inn.history || inn.history.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}">
+                      UNDO
+                    </button>
+                  </div>
+                </div>
               ` : `
-                <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-                  Super Ball Used
-                </span>
+                <div class="rounded-3xl bg-slate-900/60 border border-slate-800 p-4 text-center text-xs text-slate-400">
+                  <span class="font-bold text-slate-200 block">Live Spectator Mode</span>
+                  <span class="text-[11px] text-slate-500">Scores, boundaries and analytics sync in real time.</span>
+                </div>
               `}
-              <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-[10px] font-mono font-bold">
-                Extras: ${inn.extras.wides} WD, ${inn.extras.noBalls} NB
-              </span>
-            </div>
 
-            <!-- Innings 2 Win Predictor Bar -->
-            ${match.currentInnings === 2 ? `
-              <div class="pt-2 border-t border-slate-800/80 space-y-1">
-                <div class="flex justify-between text-[10px] font-black uppercase tracking-wider">
-                  <span class="text-amber-400">${inn.battingTeam}: Need ${needed > 0 ? needed : 0} in ${ballsRemaining}b</span>
-                  <span class="text-slate-400">Win: ${winProbA}%</span>
-                </div>
-                <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
-                  <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500" style="width: ${winProbA}%"></div>
-                  <div class="h-full bg-slate-700 transition-all duration-500" style="width: ${winProbB}%"></div>
-                </div>
-              </div>
-            ` : ''}
-          </div>
+              <!-- IN-GAME SCORECARD -->
+              <div class="bg-[#0D1424] border border-slate-800 rounded-3xl p-4 shadow-xl space-y-4">
+                <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center justify-between">
+                  <span>Current Innings Scorecard</span>
+                  <span class="text-xs font-mono text-amber-400 font-bold">${batTeam?.shortName}</span>
+                </h3>
 
-          <!-- AT THE CREASE: BATTERS & BOWLER CARDS (SYMMETRICAL) -->
-          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-3.5 space-y-2.5 shadow-xl">
-            <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider px-1">Active Batters & Bowler</div>
-
-            <!-- Striker -->
-            <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-between">
-              <div class="truncate mr-2">
-                <div class="text-xs font-black text-amber-300 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span class="truncate">${striker.name}</span>
-                  <span class="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-slate-950 font-black uppercase">Strike</span>
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">
-                  ${striker.fours} 4s • ${striker.sixes} 6s • SR: ${striker.balls > 0 ? ((striker.runs / striker.balls) * 100).toFixed(1) : "0.0"}
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="font-mono text-xl font-black text-white">${striker.runs}</span>
-                <span class="text-[10px] text-slate-400 font-mono block">(${striker.balls}b)</span>
-              </div>
-            </div>
-
-            <!-- Non-Striker -->
-            <div class="p-2.5 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-              <div class="truncate mr-2">
-                <div class="text-xs font-bold text-slate-200 truncate">
-                  ${nonStriker.name}
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">
-                  ${nonStriker.fours} 4s • ${nonStriker.sixes} 6s • SR: ${nonStriker.balls > 0 ? ((nonStriker.runs / nonStriker.balls) * 100).toFixed(1) : "0.0"}
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="font-mono text-lg font-bold text-slate-300">${nonStriker.runs}</span>
-                <span class="text-[10px] text-slate-500 font-mono block">(${nonStriker.balls}b)</span>
-              </div>
-            </div>
-
-            <!-- Active Bowler -->
-            <div class="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-between">
-              <div class="truncate mr-2">
-                <div class="text-xs font-black text-emerald-300 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span class="truncate">${bowler.name}</span>
-                  <span class="text-[9px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase">Bowling</span>
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">
-                  Econ: ${bowler.balls > 0 ? ((bowler.runs / bowler.balls) * 6).toFixed(1) : "0.0"} • Maidens: ${bowler.maidens || 0}
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="font-mono text-xl font-black text-emerald-400">${bowler.wickets}/${bowler.runs}</span>
-                <span class="text-[10px] text-slate-400 font-mono block">(${bowlerOv}/2.0 ov)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- THIS OVER TIMELINE (SYMMETRICAL DOTS, NO EMOJIS) -->
-          <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-3">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Over ${currentOverNumber}.x Timeline</span>
-              <span class="text-[10px] text-slate-500 font-mono">Last 8 deliveries</span>
-            </div>
-            <div class="flex items-center space-x-2 overflow-x-auto pb-1" id="currentOverBalls">
-              ${renderTimelineBalls(inn.timeline.slice(-8))}
-            </div>
-          </div>
-
-          <!-- SCORER KEYPAD CONTROLS (ADMIN ONLY - HIDDEN FOR SPECTATORS) -->
-          ${isAdmin ? `
-            <div class="bg-[#0E1528] border border-amber-500/40 rounded-3xl p-3.5 space-y-2.5 shadow-2xl">
-              <div class="flex items-center justify-between pb-1.5 border-b border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                <span class="text-amber-400 flex items-center gap-1">
-                  <i data-lucide="zap" class="w-3 h-3"></i> Scorer Controls
-                </span>
-                <span>Undo History (${inn.history ? inn.history.length : 0}/16)</span>
-              </div>
-
-              <!-- Row 1: Actions (3 equal columns) -->
-              <div class="grid grid-cols-3 gap-2">
-                <button 
-                  onclick="triggerSuperBallCall()" 
-                  ${!superBallEligible || inn.isSuperBallActive ? 'disabled' : ''}
-                  class="py-2.5 px-2 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all border touch-target ${
-                    inn.isSuperBallActive 
-                      ? 'bg-purple-600 border-purple-400 text-white animate-pulse' 
-                      : superBallEligible 
-                        ? 'bg-purple-950/80 border-purple-600 text-purple-200 hover:bg-purple-900' 
-                        : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
-                  }">
-                  ${inn.isSuperBallActive ? 'Superball ON' : 'Super Ball'}
-                </button>
-
-                <button onclick="swapStrikeManual()" class="py-2.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] uppercase tracking-wider border border-slate-700 transition-all touch-target">
-                  Swap Strike
-                </button>
-
-                <button onclick="openRetireModal()" class="py-2.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] uppercase tracking-wider border border-slate-700 transition-all touch-target">
-                  Retire Out
-                </button>
-              </div>
-
-              <!-- Row 2 & 3: Run Scoring Grid (3 cols x 2 rows, huge touch targets) -->
-              <div class="grid grid-cols-3 gap-2">
-                <button onclick="recordDelivery({ runs: 0 })" class="py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-xl font-mono border border-slate-700 shadow touch-target">0</button>
-                <button onclick="recordDelivery({ runs: 1 })" class="py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-xl font-mono border border-slate-700 shadow touch-target">1</button>
-                <button onclick="recordDelivery({ runs: 2 })" class="py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-xl font-mono border border-slate-700 shadow touch-target">2</button>
-                <button onclick="recordDelivery({ runs: 3 })" class="py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-xl font-mono border border-slate-700 shadow touch-target">3</button>
-                <button onclick="recordDelivery({ runs: 4, isBoundary: true })" class="py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xl font-mono shadow-md border border-blue-400 touch-target">4</button>
-                <button onclick="recordDelivery({ runs: 6, isBoundary: true })" class="py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-xl font-mono shadow-md border border-amber-300 touch-target">6</button>
-              </div>
-
-              <!-- Row 4: Extras, Wicket & Undo (4 equal columns) -->
-              <div class="grid grid-cols-4 gap-2 pt-0.5">
-                <button onclick="recordDelivery({ isWide: true })" class="py-2.5 rounded-xl bg-yellow-600/25 hover:bg-yellow-600/35 border border-yellow-500/50 text-yellow-300 font-black text-xs uppercase touch-target">
-                  WD (+1)
-                </button>
-                <button onclick="recordDelivery({ isNoBall: true })" class="py-2.5 rounded-xl bg-orange-600/25 hover:bg-orange-600/35 border border-orange-500/50 text-orange-300 font-black text-xs uppercase touch-target">
-                  NB (+1)
-                </button>
-                <button onclick="openWicketModal()" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase border border-rose-400 shadow-md touch-target">
-                  WICKET
-                </button>
-                <button onclick="undoLastDelivery()" ${!inn.history || inn.history.length === 0 ? 'disabled' : ''} class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase border border-slate-700 touch-target ${!inn.history || inn.history.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}">
-                  UNDO
-                </button>
-              </div>
-            </div>
-          ` : `
-            <!-- Spectator Notice -->
-            <div class="rounded-2xl bg-slate-900/60 border border-slate-800 p-3 text-center text-xs text-slate-400">
-              <span class="font-bold text-slate-200 block">Live Spectator Feed</span>
-              <span class="text-[11px] text-slate-500">Scores and analytics update automatically.</span>
-            </div>
-          `}
-
-          <!-- IN-GAME SCORECARD TABLES (SYMMETRICAL, MOBILE READABLE) -->
-          <div class="bg-[#0D1424] border border-slate-800 rounded-3xl p-4 shadow-xl space-y-3.5">
-            <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-              <span>Innings Scorecard</span>
-              <span class="text-[11px] font-mono text-amber-400 font-bold">${batTeam?.shortName}</span>
-            </h3>
-
-            <!-- Batting Table -->
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
-                    <th class="pb-2">Batter</th>
-                    <th class="pb-2 text-right">R</th>
-                    <th class="pb-2 text-right">B</th>
-                    <th class="pb-2 text-right">4s</th>
-                    <th class="pb-2 text-right">6s</th>
-                    <th class="pb-2 text-right">SR</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800/60 font-medium">
-                  ${Object.values(inn.batsmen).map(b => `
-                    <tr>
-                      <td class="py-2 text-white font-bold">
-                        ${b.name} ${b.name === inn.striker ? '*' : ''}
-                        ${b.isOut ? `<span class="text-[9px] text-rose-400 font-normal">(${b.dismissal || 'out'})</span>` : ''}
-                      </td>
-                      <td class="py-2 text-right font-black font-mono text-amber-400">${b.runs}</td>
-                      <td class="py-2 text-right font-mono text-slate-400">${b.balls}</td>
-                      <td class="py-2 text-right font-mono text-slate-300">${b.fours}</td>
-                      <td class="py-2 text-right font-mono text-slate-300">${b.sixes}</td>
-                      <td class="py-2 text-right font-mono text-slate-400">${b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Bowling Table -->
-            <div class="overflow-x-auto pt-2 border-t border-slate-800/80">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
-                    <th class="pb-2">Bowler</th>
-                    <th class="pb-2 text-right">O</th>
-                    <th class="pb-2 text-right">M</th>
-                    <th class="pb-2 text-right">R</th>
-                    <th class="pb-2 text-right">W</th>
-                    <th class="pb-2 text-right">Econ</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800/60 font-medium">
-                  ${Object.values(inn.bowlers).map(bw => {
-                    const bwOvers = `${Math.floor(bw.balls / 6)}.${bw.balls % 6}`;
-                    return `
-                      <tr>
-                        <td class="py-2 text-white font-bold">${bw.name}</td>
-                        <td class="py-2 text-right font-mono text-slate-300">${bwOvers}/2.0</td>
-                        <td class="py-2 text-right font-mono text-slate-400">${bw.maidens || 0}</td>
-                        <td class="py-2 text-right font-mono text-slate-300">${bw.runs}</td>
-                        <td class="py-2 text-right font-black font-mono text-emerald-400">${bw.wickets}</td>
-                        <td class="py-2 text-right font-mono text-slate-400">${bw.balls > 0 ? ((bw.runs / bw.balls) * 6).toFixed(1) : "0.0"}</td>
+                <!-- Batting Table -->
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-xs">
+                    <thead>
+                      <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
+                        <th class="pb-2">Batter</th>
+                        <th class="pb-2 text-right">R</th>
+                        <th class="pb-2 text-right">B</th>
+                        <th class="pb-2 text-right">4s</th>
+                        <th class="pb-2 text-right">6s</th>
+                        <th class="pb-2 text-right">SR</th>
                       </tr>
-                    `;
-                  }).join('')}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 font-medium">
+                      ${Object.values(inn.batsmen).map(b => `
+                        <tr>
+                          <td class="py-2 text-white font-bold">
+                            ${b.name} ${b.name === inn.striker ? '*' : ''}
+                            ${b.isOut ? `<span class="text-[9px] text-rose-400 font-normal">(${b.dismissal || 'out'})</span>` : ''}
+                          </td>
+                          <td class="py-2 text-right font-black font-mono text-amber-400">${b.runs}</td>
+                          <td class="py-2 text-right font-mono text-slate-400">${b.balls}</td>
+                          <td class="py-2 text-right font-mono text-slate-300">${b.fours}</td>
+                          <td class="py-2 text-right font-mono text-slate-300">${b.sixes}</td>
+                          <td class="py-2 text-right font-mono text-slate-400">${b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Bowling Table -->
+                <div class="overflow-x-auto pt-2 border-t border-slate-800/80">
+                  <table class="w-full text-left text-xs">
+                    <thead>
+                      <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
+                        <th class="pb-2">Bowler</th>
+                        <th class="pb-2 text-right">O</th>
+                        <th class="pb-2 text-right">M</th>
+                        <th class="pb-2 text-right">R</th>
+                        <th class="pb-2 text-right">W</th>
+                        <th class="pb-2 text-right">Econ</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 font-medium">
+                      ${Object.values(inn.bowlers).map(bw => {
+                        const bwOvers = `${Math.floor(bw.balls / 6)}.${bw.balls % 6}`;
+                        return `
+                          <tr>
+                            <td class="py-2 text-white font-bold">${bw.name}</td>
+                            <td class="py-2 text-right font-mono text-slate-300">${bwOvers}/2.0</td>
+                            <td class="py-2 text-right font-mono text-slate-400">${bw.maidens || 0}</td>
+                            <td class="py-2 text-right font-mono text-slate-300">${bw.runs}</td>
+                            <td class="py-2 text-right font-black font-mono text-emerald-400">${bw.wickets}</td>
+                            <td class="py-2 text-right font-mono text-slate-400">${bw.balls > 0 ? ((bw.runs / bw.balls) * 6).toFixed(1) : "0.0"}</td>
+                          </tr>
+                        `;
+                      }).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
       `;
@@ -1718,7 +1783,7 @@
               return `
                 <button onclick="selectNextBowler('${p}')" class="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 flex items-center justify-between text-left text-xs font-bold text-white transition-all touch-target">
                   <span>${p}</span>
-                  <span class="text-emerald-400 font-mono text-[11px]">${b.wickets}/${b.runs} (${ov}/2.0) &rarr;</span>
+                  <span class="text-emerald-400 font-mono text-[11px]">${b.wickets}/${b.runs} (${ov}/2.0)</span>
                 </button>
               `;
             }).join('')}
@@ -1791,7 +1856,7 @@
             ${availableBatters.map(p => `
               <button onclick="selectIncomingBatsman('${p}')" class="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 flex items-center justify-between text-left text-xs font-bold text-white transition-all touch-target">
                 <span>${p}</span>
-                <span class="text-amber-400 font-bold">&rarr;</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-amber-400"></i>
               </button>
             `).join('')}
           </div>
@@ -1799,6 +1864,7 @@
       `;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      renderIcons();
     }
 
     function selectIncomingBatsman(p) {
@@ -1874,7 +1940,7 @@
           </div>
 
           <button onclick="confirmSecondInningsStart('${batTeam}', '${bowlTeam}')" class="w-full py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg touch-target">
-            Start 2nd Innings &rarr;
+            Start 2nd Innings
           </button>
         </div>
       `;
@@ -2034,53 +2100,61 @@
     }
 
     /**
-     * SCREEN 3: FIXTURES & SEQUENTIAL UNLOCKING
+     * SCREEN 3: FIXTURES (RESPONSIVE GRID)
      */
     function renderFixturesScreen(container) {
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Tournament Fixtures', '8 Overs Per Match')}
 
-          <div class="space-y-2.5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${AppState.fixtures.map(f => {
               const isLive = AppState.liveMatch && AppState.liveMatch.fixtureId === f.id;
               return `
-                <div class="rounded-3xl bg-[#0D1424] border ${isLive ? 'border-amber-500 shadow-amber-500/20' : f.status === 'unlocked' ? 'border-slate-700' : 'border-slate-800/60 opacity-80'} p-3.5 shadow-xl">
-                  <div class="flex items-center justify-between mb-2.5">
-                    <span class="text-[10px] font-black uppercase tracking-wider ${f.type === 'FINAL' ? 'text-amber-400' : 'text-slate-400'}">
-                      ${f.name} • ${f.type}
-                    </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                      isLive ? 'bg-red-500/20 text-red-400 animate-pulse' :
-                      f.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                      f.status === 'unlocked' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'
-                    }">
-                      ${isLive ? 'LIVE NOW' : f.status.toUpperCase()}
-                    </span>
-                  </div>
+                <div class="rounded-3xl bg-[#0D1424] border ${isLive ? 'border-amber-500 shadow-amber-500/20' : f.status === 'unlocked' ? 'border-slate-700' : 'border-slate-800/60 opacity-80'} p-4 sm:p-5 shadow-xl flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-[10px] sm:text-xs font-black uppercase tracking-wider ${f.type === 'FINAL' ? 'text-amber-400' : 'text-slate-400'}">
+                        ${f.name} • ${f.type}
+                      </span>
+                      <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold ${
+                        isLive ? 'bg-red-500/20 text-red-400 animate-pulse' :
+                        f.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                        f.status === 'unlocked' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'
+                      }">
+                        ${isLive ? 'LIVE NOW' : f.status.toUpperCase()}
+                      </span>
+                    </div>
 
-                  <div class="flex items-center justify-between py-1">
-                    <div class="flex items-center space-x-2">
-                      ${renderTeamLogo(f.teamA, "w-9 h-9")}
-                      <div class="font-bold text-xs text-white">${AppState.teams[f.teamA]?.name || f.teamA || 'TBD'}</div>
+                    <div class="flex items-center justify-between py-2">
+                      <div class="flex items-center space-x-3">
+                        ${renderTeamLogo(f.teamA, "w-10 h-10 sm:w-12 sm:h-12")}
+                        <div>
+                          <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[f.teamA]?.name || f.teamA || 'TBD'}</div>
+                          <div class="text-[10px] text-slate-400">${f.teamA || 'TBD'}</div>
+                        </div>
+                      </div>
+                      <div class="font-display text-2xl font-black text-amber-400/80">VS</div>
+                      <div class="flex items-center space-x-3 text-right">
+                        <div>
+                          <div class="font-bold text-xs sm:text-sm text-white">${AppState.teams[f.teamB]?.name || f.teamB || 'TBD'}</div>
+                          <div class="text-[10px] text-slate-400">${f.teamB || 'TBD'}</div>
+                        </div>
+                        ${renderTeamLogo(f.teamB, "w-10 h-10 sm:w-12 sm:h-12")}
+                      </div>
                     </div>
-                    <div class="font-display text-xl font-black text-amber-400/80">VS</div>
-                    <div class="flex items-center space-x-2 text-right">
-                      <div class="font-bold text-xs text-white">${AppState.teams[f.teamB]?.name || f.teamB || 'TBD'}</div>
-                      ${renderTeamLogo(f.teamB, "w-9 h-9")}
-                    </div>
-                  </div>
 
-                  ${f.result ? `
-                    <div class="mt-2.5 pt-2 border-t border-slate-800 text-center text-xs font-bold text-emerald-400">
-                      ${f.result}
-                    </div>
-                  ` : ''}
+                    ${f.result ? `
+                      <div class="mt-3 py-2 px-3 rounded-xl bg-slate-900 border border-slate-800 text-center text-xs font-bold text-emerald-400">
+                        ${f.result}
+                      </div>
+                    ` : ''}
+                  </div>
 
                   <!-- Start / Resume Button (ADMIN ONLY) -->
                   ${isAdmin && (f.status === 'unlocked' || isLive) ? `
-                    <div class="mt-2.5 pt-2.5 border-t border-slate-800">
-                      <button onclick="launchMatchSetup(${f.id})" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 touch-target">
+                    <div class="mt-3.5 pt-3 border-t border-slate-800">
+                      <button onclick="launchMatchSetup(${f.id})" class="w-full py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 touch-target">
                         ${isLive ? 'Resume Live Scoring' : 'Setup & Toss Match'}
                       </button>
                     </div>
@@ -2181,7 +2255,7 @@
           <div class="flex items-center space-x-2">
             <button onclick="closeModal()" class="w-1/3 py-2.5 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold touch-target">Cancel</button>
             <button onclick="confirmPlaying11AndProceed()" class="w-2/3 py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg touch-target">
-              Confirm 11 & Toss &rarr;
+              Confirm 11 & Toss
             </button>
           </div>
         </div>
@@ -2325,7 +2399,7 @@
           </div>
 
           <button onclick="startMatchOfficially('${batTeam}', '${bowlTeam}')" class="w-full py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg touch-target">
-            Start 8-Over Match &rarr;
+            Start 8-Over Match
           </button>
         </div>
       `;
@@ -2389,34 +2463,34 @@
       const standings = calculateStandings();
 
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Points Table', 'Top 3 Qualify for Knockouts')}
 
           <div class="rounded-3xl bg-[#0D1424] border border-slate-800 shadow-xl overflow-hidden">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/90 text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 border-b border-slate-800 uppercase font-black">
                 <tr>
-                  <th class="py-2.5 px-3">Team</th>
-                  <th class="py-2.5 text-center">P</th>
-                  <th class="py-2.5 text-center">W</th>
-                  <th class="py-2.5 text-center">L</th>
-                  <th class="py-2.5 text-center font-bold text-amber-400">Pts</th>
-                  <th class="py-2.5 text-right pr-3">NRR</th>
+                  <th class="py-3 px-3 sm:px-4">Team</th>
+                  <th class="py-3 text-center">P</th>
+                  <th class="py-3 text-center">W</th>
+                  <th class="py-3 text-center">L</th>
+                  <th class="py-3 text-center font-bold text-amber-400">Pts</th>
+                  <th class="py-3 text-right pr-4">NRR</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-800/60 font-semibold">
                 ${standings.map((s, idx) => `
                   <tr class="${idx < 3 ? 'bg-amber-500/5' : ''}">
-                    <td class="py-2.5 px-3 flex items-center space-x-2">
-                      <span class="font-bold text-[10px] ${idx === 0 ? 'text-amber-400 font-black' : 'text-slate-400'}">${idx + 1}</span>
-                      ${renderTeamLogo(s.teamId, "w-6 h-6")}
+                    <td class="py-3 px-3 sm:px-4 flex items-center space-x-2.5">
+                      <span class="font-bold text-xs ${idx === 0 ? 'text-amber-400 font-black' : 'text-slate-400'}">${idx + 1}</span>
+                      ${renderTeamLogo(s.teamId, "w-7 h-7 sm:w-8 sm:h-8")}
                       <span class="font-bold text-white">${s.teamId}</span>
                     </td>
-                    <td class="py-2.5 text-center font-mono text-slate-300">${s.played}</td>
-                    <td class="py-2.5 text-center font-mono text-emerald-400 font-bold">${s.won}</td>
-                    <td class="py-2.5 text-center font-mono text-rose-400">${s.lost}</td>
-                    <td class="py-2.5 text-center font-mono text-amber-400 font-black">${s.pts}</td>
-                    <td class="py-2.5 text-right pr-3 font-mono ${s.nrr >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                    <td class="py-3 text-center font-mono text-slate-300">${s.played}</td>
+                    <td class="py-3 text-center font-mono text-emerald-400 font-bold">${s.won}</td>
+                    <td class="py-3 text-center font-mono text-rose-400">${s.lost}</td>
+                    <td class="py-3 text-center font-mono text-amber-400 font-black">${s.pts}</td>
+                    <td class="py-3 text-right pr-4 font-mono ${s.nrr >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
                       ${s.nrr > 0 ? '+' : ''}${s.nrr.toFixed(3)}
                     </td>
                   </tr>
@@ -2425,7 +2499,7 @@
             </table>
           </div>
 
-          <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-2xl text-[11px] text-slate-400 space-y-1">
+          <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-3xl text-xs text-slate-400 space-y-1.5">
             <div class="font-bold text-slate-200">Qualification Criteria:</div>
             <div>• Rank 1 qualifies directly to the Grand Final.</div>
             <div>• Rank 2 & 3 compete in the Playoff (Knockout).</div>
@@ -2436,11 +2510,12 @@
     }
 
     /**
-     * SCREEN 5: LEADERBOARDS (REDESIGNED WITH ALL 4 CATEGORIES & STATS TABLE)
+     * SCREEN 5: LEADERBOARDS (WITH PER-MATCH LEADERBOARD)
      */
     function renderAwardsScreen(container, params = {}) {
       if (params.category) currentLeaderboardTab = params.category;
       if (params.team) currentLeaderboardTeam = params.team;
+      if (params.matchId) currentLeaderboardMatchId = params.matchId;
 
       const players = Object.values(AppState.playerStats);
 
@@ -2486,24 +2561,108 @@
         }))
         .sort((a, b) => b.wickets - a.wickets || a.runsConceded - b.runsConceded);
 
-      // Category Tabs Controller
+      // Per-match calculation
+      const matchesWithData = AppState.fixtures.filter(f => f.scorecard || (AppState.liveMatch && AppState.liveMatch.fixtureId === f.id));
+      const selectedMatchFixture = AppState.fixtures.find(f => f.id === currentLeaderboardMatchId);
+      const selectedScorecard = (AppState.liveMatch && AppState.liveMatch.fixtureId === currentLeaderboardMatchId)
+        ? AppState.liveMatch
+        : (selectedMatchFixture ? selectedMatchFixture.scorecard : null);
+
+      let matchBatters = [];
+      let matchBowlers = [];
+      let matchMVP = null;
+
+      if (selectedScorecard) {
+        [selectedScorecard.innings1, selectedScorecard.innings2].forEach(inn => {
+          if (!inn) return;
+          if (inn.batsmen) {
+            Object.values(inn.batsmen).forEach(b => {
+              if (b.balls > 0 || b.runs > 0) {
+                matchBatters.push({
+                  name: b.name,
+                  team: inn.battingTeam,
+                  runs: b.runs,
+                  balls: b.balls,
+                  fours: b.fours || 0,
+                  sixes: b.sixes || 0,
+                  isOut: b.isOut,
+                  sr: b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"
+                });
+              }
+            });
+          }
+          if (inn.bowlers) {
+            Object.values(inn.bowlers).forEach(bw => {
+              if (bw.balls > 0) {
+                matchBowlers.push({
+                  name: bw.name,
+                  team: inn.bowlingTeam,
+                  balls: bw.balls,
+                  overs: `${Math.floor(bw.balls / 6)}.${bw.balls % 6}`,
+                  maidens: bw.maidens || 0,
+                  runs: bw.runs,
+                  wickets: bw.wickets,
+                  econ: bw.balls > 0 ? ((bw.runs / bw.balls) * 6).toFixed(1) : "0.0"
+                });
+              }
+            });
+          }
+        });
+
+        matchBatters.sort((a, b) => b.runs - a.runs || b.sixes - a.sixes);
+        matchBowlers.sort((a, b) => b.wickets - a.wickets || a.runs - b.runs);
+
+        // Calculate MVP
+        const mvpPointsMap = {};
+        matchBatters.forEach(b => {
+          mvpPointsMap[b.name] = (mvpPointsMap[b.name] || 0) + (b.runs * 1) + (b.fours * 1) + (b.sixes * 2);
+        });
+        matchBowlers.forEach(bw => {
+          mvpPointsMap[bw.name] = (mvpPointsMap[bw.name] || 0) + (bw.wickets * 20) + (bw.maidens * 15);
+        });
+
+        let topPoints = -1;
+        let mvpName = null;
+        Object.keys(mvpPointsMap).forEach(name => {
+          if (mvpPointsMap[name] > topPoints) {
+            topPoints = mvpPointsMap[name];
+            mvpName = name;
+          }
+        });
+
+        if (mvpName) {
+          const bStat = matchBatters.find(b => b.name === mvpName);
+          const bwStat = matchBowlers.find(bw => bw.name === mvpName);
+          matchMVP = {
+            name: mvpName,
+            points: topPoints,
+            runs: bStat ? bStat.runs : 0,
+            balls: bStat ? bStat.balls : 0,
+            wickets: bwStat ? bwStat.wickets : 0,
+            runsConceded: bwStat ? bwStat.runs : 0
+          };
+        }
+      }
+
+      // 5 Main Tabs
       const tabs = [
         { id: 'runs', label: 'Most Runs' },
         { id: 'wickets', label: 'Most Wickets' },
         { id: 'sixes', label: 'Most Sixes' },
+        { id: 'match', label: 'Per Match' },
         { id: 'teams', label: 'Team Leaders' }
       ];
 
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Leaderboard', 'Tournament Top Performers')}
 
-          <!-- Category Segmented Control (Thumb-Friendly) -->
-          <div class="grid grid-cols-4 gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-bold">
+          <!-- Category Segmented Control -->
+          <div class="grid grid-cols-5 gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-bold">
             ${tabs.map(t => `
               <button 
                 onclick="switchLeaderboardCategory('${t.id}')" 
-                class="py-2 px-1 text-center rounded-xl transition-all touch-target text-[11px] font-black uppercase ${
+                class="py-2.5 px-1 text-center rounded-xl transition-all touch-target text-[10px] sm:text-xs font-black uppercase ${
                   currentLeaderboardTab === t.id 
                     ? 'bg-amber-500 text-slate-950 shadow-md' 
                     : 'text-slate-400 hover:text-white'
@@ -2515,36 +2674,36 @@
 
           <!-- CATEGORY 1: MOST RUNS -->
           ${currentLeaderboardTab === 'runs' ? `
-            <div class="space-y-2">
+            <div class="space-y-2.5">
               <div class="flex items-center justify-between px-1">
-                <span class="text-xs font-black uppercase tracking-wider text-amber-400">Overall Highest Scorers</span>
-                <span class="text-[10px] text-slate-400 font-mono">B: Balls • SR: Strike Rate</span>
+                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-400">Overall Highest Scorers</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-mono">B: Balls • SR: Strike Rate</span>
               </div>
-              <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0D1424] shadow-xl">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-900/90 text-[10px] text-slate-400 uppercase font-black border-b border-slate-800">
+              <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
                     <tr>
-                      <th class="py-2.5 px-2 text-center w-7">#</th>
-                      <th class="py-2.5 px-2">Player</th>
-                      <th class="py-2.5 px-1 text-center">Team</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono">B</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono font-black text-amber-400">R</th>
-                      <th class="py-2.5 px-1 text-right font-mono">4s</th>
-                      <th class="py-2.5 px-1 text-right font-mono">6s</th>
-                      <th class="py-2.5 pr-2.5 text-right font-mono">SR</th>
+                      <th class="py-3 px-3 text-center w-8">#</th>
+                      <th class="py-3 px-3">Player</th>
+                      <th class="py-3 px-2 text-center">Team</th>
+                      <th class="py-3 px-2 text-right font-mono">B</th>
+                      <th class="py-3 px-2 text-right font-mono font-black text-amber-400">R</th>
+                      <th class="py-3 px-2 text-right font-mono">4s</th>
+                      <th class="py-3 px-2 text-right font-mono">6s</th>
+                      <th class="py-3 pr-4 text-right font-mono">SR</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800/60 font-semibold">
-                    ${topRunScorers.slice(0, 10).map((p, idx) => `
+                    ${topRunScorers.slice(0, 15).map((p, idx) => `
                       <tr class="${idx === 0 ? 'bg-amber-500/10' : ''}">
-                        <td class="py-2.5 px-2 text-center font-bold text-[10px] ${idx === 0 ? 'text-amber-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-white truncate max-w-[110px]">${p.name}</td>
-                        <td class="py-2.5 px-1 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono text-slate-400">${p.balls}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono font-black text-amber-400 text-sm">${p.runs}</td>
-                        <td class="py-2.5 px-1 text-right font-mono text-slate-300">${p.fours}</td>
-                        <td class="py-2.5 px-1 text-right font-mono text-slate-300">${p.sixes}</td>
-                        <td class="py-2.5 pr-2.5 text-right font-mono text-slate-400">${p.sr}</td>
+                        <td class="py-3 px-3 text-center font-bold text-xs ${idx === 0 ? 'text-amber-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
+                        <td class="py-3 px-3 font-bold text-white truncate max-w-[140px]">${p.name}</td>
+                        <td class="py-3 px-2 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-400">${p.balls}</td>
+                        <td class="py-3 px-2 text-right font-mono font-black text-amber-400 text-sm sm:text-base">${p.runs}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-300">${p.fours}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-300">${p.sixes}</td>
+                        <td class="py-3 pr-4 text-right font-mono text-slate-400">${p.sr}</td>
                       </tr>
                     `).join('')}
                   </tbody>
@@ -2555,36 +2714,36 @@
 
           <!-- CATEGORY 2: MOST WICKETS -->
           ${currentLeaderboardTab === 'wickets' ? `
-            <div class="space-y-2">
+            <div class="space-y-2.5">
               <div class="flex items-center justify-between px-1">
-                <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Most Wicket Takers</span>
-                <span class="text-[10px] text-slate-400 font-mono">O: Overs • M: Maidens</span>
+                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-400">Most Wicket Takers</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-mono">O: Overs • M: Maidens</span>
               </div>
-              <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0D1424] shadow-xl">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-900/90 text-[10px] text-slate-400 uppercase font-black border-b border-slate-800">
+              <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
                     <tr>
-                      <th class="py-2.5 px-2 text-center w-7">#</th>
-                      <th class="py-2.5 px-2">Bowler</th>
-                      <th class="py-2.5 px-1 text-center">Team</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono">O</th>
-                      <th class="py-2.5 px-1 text-right font-mono">M</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono">R</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono font-black text-emerald-400">W</th>
-                      <th class="py-2.5 pr-2.5 text-right font-mono">Econ</th>
+                      <th class="py-3 px-3 text-center w-8">#</th>
+                      <th class="py-3 px-3">Bowler</th>
+                      <th class="py-3 px-2 text-center">Team</th>
+                      <th class="py-3 px-2 text-right font-mono">O</th>
+                      <th class="py-3 px-2 text-right font-mono">M</th>
+                      <th class="py-3 px-2 text-right font-mono">R</th>
+                      <th class="py-3 px-2 text-right font-mono font-black text-emerald-400">W</th>
+                      <th class="py-3 pr-4 text-right font-mono">Econ</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800/60 font-semibold">
-                    ${topWicketTakers.slice(0, 10).map((p, idx) => `
+                    ${topWicketTakers.slice(0, 15).map((p, idx) => `
                       <tr class="${idx === 0 ? 'bg-emerald-500/10' : ''}">
-                        <td class="py-2.5 px-2 text-center font-bold text-[10px] ${idx === 0 ? 'text-emerald-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-white truncate max-w-[110px]">${p.name}</td>
-                        <td class="py-2.5 px-1 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono text-slate-400">${p.overs}</td>
-                        <td class="py-2.5 px-1 text-right font-mono text-slate-400">${p.maidens || 0}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono text-slate-300">${p.runsConceded}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono font-black text-emerald-400 text-sm">${p.wickets}</td>
-                        <td class="py-2.5 pr-2.5 text-right font-mono text-slate-400">${p.econ}</td>
+                        <td class="py-3 px-3 text-center font-bold text-xs ${idx === 0 ? 'text-emerald-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
+                        <td class="py-3 px-3 font-bold text-white truncate max-w-[140px]">${p.name}</td>
+                        <td class="py-3 px-2 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-400">${p.overs}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-400">${p.maidens || 0}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-300">${p.runsConceded}</td>
+                        <td class="py-3 px-2 text-right font-mono font-black text-emerald-400 text-sm sm:text-base">${p.wickets}</td>
+                        <td class="py-3 pr-4 text-right font-mono text-slate-400">${p.econ}</td>
                       </tr>
                     `).join('')}
                   </tbody>
@@ -2595,36 +2754,36 @@
 
           <!-- CATEGORY 3: MOST SIXES -->
           ${currentLeaderboardTab === 'sixes' ? `
-            <div class="space-y-2">
+            <div class="space-y-2.5">
               <div class="flex items-center justify-between px-1">
-                <span class="text-xs font-black uppercase tracking-wider text-blue-400">Players With Most Sixes</span>
-                <span class="text-[10px] text-slate-400 font-mono">Maximum Hits</span>
+                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-blue-400">Players With Most Sixes</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-mono">Maximum Hits</span>
               </div>
-              <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0D1424] shadow-xl">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-900/90 text-[10px] text-slate-400 uppercase font-black border-b border-slate-800">
+              <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
                     <tr>
-                      <th class="py-2.5 px-2 text-center w-7">#</th>
-                      <th class="py-2.5 px-2">Player</th>
-                      <th class="py-2.5 px-1 text-center">Team</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono">B</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono">R</th>
-                      <th class="py-2.5 px-1.5 text-right font-mono font-black text-blue-400">6s</th>
-                      <th class="py-2.5 px-1 text-right font-mono">4s</th>
-                      <th class="py-2.5 pr-2.5 text-right font-mono">SR</th>
+                      <th class="py-3 px-3 text-center w-8">#</th>
+                      <th class="py-3 px-3">Player</th>
+                      <th class="py-3 px-2 text-center">Team</th>
+                      <th class="py-3 px-2 text-right font-mono">B</th>
+                      <th class="py-3 px-2 text-right font-mono">R</th>
+                      <th class="py-3 px-2 text-right font-mono font-black text-blue-400">6s</th>
+                      <th class="py-3 px-2 text-right font-mono">4s</th>
+                      <th class="py-3 pr-4 text-right font-mono">SR</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800/60 font-semibold">
-                    ${topSixHitters.slice(0, 10).map((p, idx) => `
+                    ${topSixHitters.slice(0, 15).map((p, idx) => `
                       <tr class="${idx === 0 ? 'bg-blue-500/10' : ''}">
-                        <td class="py-2.5 px-2 text-center font-bold text-[10px] ${idx === 0 ? 'text-blue-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-white truncate max-w-[110px]">${p.name}</td>
-                        <td class="py-2.5 px-1 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono text-slate-400">${p.balls}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono text-slate-300">${p.runs}</td>
-                        <td class="py-2.5 px-1.5 text-right font-mono font-black text-blue-400 text-sm">${p.sixes}</td>
-                        <td class="py-2.5 px-1 text-right font-mono text-slate-400">${p.fours}</td>
-                        <td class="py-2.5 pr-2.5 text-right font-mono text-slate-400">${p.sr}</td>
+                        <td class="py-3 px-3 text-center font-bold text-xs ${idx === 0 ? 'text-blue-400 font-black' : 'text-slate-500'}">${idx + 1}</td>
+                        <td class="py-3 px-3 font-bold text-white truncate max-w-[140px]">${p.name}</td>
+                        <td class="py-3 px-2 text-center font-bold text-[10px] text-slate-400">${p.team}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-400">${p.balls}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-300">${p.runs}</td>
+                        <td class="py-3 px-2 text-right font-mono font-black text-blue-400 text-sm sm:text-base">${p.sixes}</td>
+                        <td class="py-3 px-2 text-right font-mono text-slate-400">${p.fours}</td>
+                        <td class="py-3 pr-4 text-right font-mono text-slate-400">${p.sr}</td>
                       </tr>
                     `).join('')}
                   </tbody>
@@ -2633,15 +2792,139 @@
             </div>
           ` : ''}
 
-          <!-- CATEGORY 4: IN TEAM PLAYERS LEADERBOARD -->
+          <!-- CATEGORY 4: PER MATCH LEADERBOARD -->
+          ${currentLeaderboardTab === 'match' ? `
+            <div class="space-y-4">
+              <!-- Match Selector Pills -->
+              <div class="flex items-center space-x-2 overflow-x-auto pb-1">
+                ${AppState.fixtures.map(f => {
+                  const hasData = f.scorecard || (AppState.liveMatch && AppState.liveMatch.fixtureId === f.id);
+                  const isCurrent = currentLeaderboardMatchId === f.id;
+                  return `
+                    <button 
+                      onclick="switchLeaderboardMatch(${f.id})" 
+                      class="px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase transition-all shrink-0 touch-target ${
+                        isCurrent 
+                          ? 'bg-amber-500 text-slate-950 font-black shadow-md' 
+                          : hasData 
+                            ? 'bg-slate-900 border border-slate-700 text-slate-200 hover:text-white' 
+                            : 'bg-slate-900/60 border border-slate-800 text-slate-500'
+                      }">
+                      ${f.name}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+
+              ${!selectedScorecard ? `
+                <div class="p-8 text-center rounded-3xl bg-[#0D1424] border border-slate-800 text-slate-400 text-xs sm:text-sm space-y-2">
+                  <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto text-slate-500">
+                    <i data-lucide="calendar" class="w-6 h-6"></i>
+                  </div>
+                  <div class="font-bold text-white">No scorecard recorded for ${selectedMatchFixture ? selectedMatchFixture.name : 'this match'} yet.</div>
+                  <p class="text-slate-500 text-xs">Top batters, bowlers and MVP will appear here once the match is underway or finished.</p>
+                </div>
+              ` : `
+                <!-- Match Summary Banner -->
+                <div class="rounded-3xl bg-gradient-to-r from-amber-950/30 via-[#0D1424] to-slate-900 border border-amber-500/40 p-4 sm:p-5 shadow-xl flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    ${renderTeamLogo(selectedScorecard.teamA, "w-10 h-10 sm:w-12 sm:h-12")}
+                    <div>
+                      <div class="font-display text-xl sm:text-2xl font-black text-white uppercase">${selectedScorecard.teamA} vs ${selectedScorecard.teamB}</div>
+                      <div class="text-xs text-amber-400 font-semibold">${selectedMatchFixture?.result || 'Live In Progress'}</div>
+                    </div>
+                  </div>
+                  ${matchMVP ? `
+                    <div class="text-right p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+                      <span class="text-[9px] uppercase font-black tracking-wider text-amber-400 block">Match MVP</span>
+                      <span class="font-bold text-xs sm:text-sm text-white block">${matchMVP.name}</span>
+                      <span class="text-[10px] text-slate-400 font-mono">${matchMVP.runs}r (${matchMVP.balls}b) • ${matchMVP.wickets}w</span>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <!-- Match Top Batters Table -->
+                <div class="space-y-2">
+                  <div class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-400 px-1">Top Batters of Match</div>
+                  <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                      <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
+                        <tr>
+                          <th class="py-2.5 px-3">Batter</th>
+                          <th class="py-2.5 px-2 text-center">Team</th>
+                          <th class="py-2.5 px-2 text-right font-mono">B</th>
+                          <th class="py-2.5 px-2 text-right font-mono font-black text-amber-400">R</th>
+                          <th class="py-2.5 px-2 text-right font-mono">4s</th>
+                          <th class="py-2.5 px-2 text-right font-mono">6s</th>
+                          <th class="py-2.5 pr-4 text-right font-mono">SR</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800/60 font-semibold">
+                        ${matchBatters.length === 0 ? `
+                          <tr><td colspan="7" class="py-4 text-center text-slate-500 italic">No batting stats yet.</td></tr>
+                        ` : matchBatters.map((b, idx) => `
+                          <tr class="${idx === 0 ? 'bg-amber-500/10' : ''}">
+                            <td class="py-2.5 px-3 font-bold text-white truncate max-w-[130px]">${b.name}</td>
+                            <td class="py-2.5 px-2 text-center font-bold text-[10px] text-slate-400">${b.team}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-400">${b.balls}</td>
+                            <td class="py-2.5 px-2 text-right font-mono font-black text-amber-400">${b.runs}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-300">${b.fours}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-300">${b.sixes}</td>
+                            <td class="py-2.5 pr-4 text-right font-mono text-slate-400">${b.sr}</td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Match Best Bowlers Table -->
+                <div class="space-y-2 pt-2">
+                  <div class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-400 px-1">Best Bowlers of Match</div>
+                  <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                      <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
+                        <tr>
+                          <th class="py-2.5 px-3">Bowler</th>
+                          <th class="py-2.5 px-2 text-center">Team</th>
+                          <th class="py-2.5 px-2 text-right font-mono">O</th>
+                          <th class="py-2.5 px-2 text-right font-mono">M</th>
+                          <th class="py-2.5 px-2 text-right font-mono">R</th>
+                          <th class="py-2.5 px-2 text-right font-mono font-black text-emerald-400">W</th>
+                          <th class="py-2.5 pr-4 text-right font-mono">Econ</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800/60 font-semibold">
+                        ${matchBowlers.length === 0 ? `
+                          <tr><td colspan="7" class="py-4 text-center text-slate-500 italic">No bowling stats yet.</td></tr>
+                        ` : matchBowlers.map((bw, idx) => `
+                          <tr class="${idx === 0 ? 'bg-emerald-500/10' : ''}">
+                            <td class="py-2.5 px-3 font-bold text-white truncate max-w-[130px]">${bw.name}</td>
+                            <td class="py-2.5 px-2 text-center font-bold text-[10px] text-slate-400">${bw.team}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-400">${bw.overs}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-400">${bw.maidens}</td>
+                            <td class="py-2.5 px-2 text-right font-mono text-slate-300">${bw.runs}</td>
+                            <td class="py-2.5 px-2 text-right font-mono font-black text-emerald-400">${bw.wickets}</td>
+                            <td class="py-2.5 pr-4 text-right font-mono text-slate-400">${bw.econ}</td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              `}
+            </div>
+          ` : ''}
+
+          <!-- CATEGORY 5: IN TEAM PLAYERS LEADERBOARD -->
           ${currentLeaderboardTab === 'teams' ? `
-            <div class="space-y-3">
+            <div class="space-y-4">
               <!-- Franchise Selector Pills -->
-              <div class="flex items-center space-x-1.5 overflow-x-auto pb-1">
+              <div class="flex items-center space-x-2 overflow-x-auto pb-1">
                 ${Object.values(AppState.teams).map(t => `
                   <button 
                     onclick="switchLeaderboardTeam('${t.id}')" 
-                    class="px-3 py-1.5 rounded-xl text-xs font-bold uppercase transition-all flex items-center space-x-1.5 shrink-0 touch-target ${
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase transition-all flex items-center space-x-2 shrink-0 touch-target ${
                       currentLeaderboardTeam === t.id 
                         ? 'bg-amber-500 text-slate-950 shadow-md font-black' 
                         : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
@@ -2653,33 +2936,33 @@
               </div>
 
               <!-- Team Batters Table -->
-              <div class="space-y-1.5">
-                <div class="text-[11px] font-black uppercase text-amber-400 px-1">
+              <div class="space-y-2">
+                <div class="text-xs sm:text-sm font-black uppercase text-amber-400 px-1">
                   ${AppState.teams[currentLeaderboardTeam]?.name} • Batting
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0D1424] shadow-xl">
-                  <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-900/90 text-[10px] text-slate-400 uppercase font-black border-b border-slate-800">
+                <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                  <table class="w-full text-left text-xs sm:text-sm">
+                    <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
                       <tr>
-                        <th class="py-2.5 px-2 text-center w-7">#</th>
-                        <th class="py-2.5 px-2">Batter</th>
-                        <th class="py-2.5 px-1.5 text-right font-mono">B</th>
-                        <th class="py-2.5 px-1.5 text-right font-mono font-black text-amber-400">R</th>
-                        <th class="py-2.5 px-1 text-right font-mono">4s</th>
-                        <th class="py-2.5 px-1 text-right font-mono">6s</th>
-                        <th class="py-2.5 pr-2.5 text-right font-mono">SR</th>
+                        <th class="py-2.5 px-3 text-center w-8">#</th>
+                        <th class="py-2.5 px-3">Batter</th>
+                        <th class="py-2.5 px-2 text-right font-mono">B</th>
+                        <th class="py-2.5 px-2 text-right font-mono font-black text-amber-400">R</th>
+                        <th class="py-2.5 px-2 text-right font-mono">4s</th>
+                        <th class="py-2.5 px-2 text-right font-mono">6s</th>
+                        <th class="py-2.5 pr-4 text-right font-mono">SR</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800/60 font-semibold">
                       ${teamBatters.map((p, idx) => `
                         <tr>
-                          <td class="py-2.5 px-2 text-center font-bold text-[10px] text-slate-500">${idx + 1}</td>
-                          <td class="py-2.5 px-2 font-bold text-white truncate max-w-[120px]">${p.name}</td>
-                          <td class="py-2.5 px-1.5 text-right font-mono text-slate-400">${p.balls}</td>
-                          <td class="py-2.5 px-1.5 text-right font-mono font-black text-amber-400">${p.runs}</td>
-                          <td class="py-2.5 px-1 text-right font-mono text-slate-300">${p.fours}</td>
-                          <td class="py-2.5 px-1 text-right font-mono text-slate-300">${p.sixes}</td>
-                          <td class="py-2.5 pr-2.5 text-right font-mono text-slate-400">${p.sr}</td>
+                          <td class="py-2.5 px-3 text-center font-bold text-xs text-slate-500">${idx + 1}</td>
+                          <td class="py-2.5 px-3 font-bold text-white truncate max-w-[140px]">${p.name}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-400">${p.balls}</td>
+                          <td class="py-2.5 px-2 text-right font-mono font-black text-amber-400">${p.runs}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-300">${p.fours}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-300">${p.sixes}</td>
+                          <td class="py-2.5 pr-4 text-right font-mono text-slate-400">${p.sr}</td>
                         </tr>
                       `).join('')}
                     </tbody>
@@ -2688,33 +2971,33 @@
               </div>
 
               <!-- Team Bowlers Table -->
-              <div class="space-y-1.5 pt-1">
-                <div class="text-[11px] font-black uppercase text-emerald-400 px-1">
+              <div class="space-y-2 pt-1">
+                <div class="text-xs sm:text-sm font-black uppercase text-emerald-400 px-1">
                   ${AppState.teams[currentLeaderboardTeam]?.name} • Bowling
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0D1424] shadow-xl">
-                  <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-900/90 text-[10px] text-slate-400 uppercase font-black border-b border-slate-800">
+                <div class="overflow-x-auto rounded-3xl border border-slate-800 bg-[#0D1424] shadow-xl">
+                  <table class="w-full text-left text-xs sm:text-sm">
+                    <thead class="bg-slate-900/90 text-[10px] sm:text-xs text-slate-400 uppercase font-black border-b border-slate-800">
                       <tr>
-                        <th class="py-2.5 px-2 text-center w-7">#</th>
-                        <th class="py-2.5 px-2">Bowler</th>
-                        <th class="py-2.5 px-1.5 text-right font-mono">O</th>
-                        <th class="py-2.5 px-1 text-right font-mono">M</th>
-                        <th class="py-2.5 px-1.5 text-right font-mono">R</th>
-                        <th class="py-2.5 px-1.5 text-right font-mono font-black text-emerald-400">W</th>
-                        <th class="py-2.5 pr-2.5 text-right font-mono">Econ</th>
+                        <th class="py-2.5 px-3 text-center w-8">#</th>
+                        <th class="py-2.5 px-3">Bowler</th>
+                        <th class="py-2.5 px-2 text-right font-mono">O</th>
+                        <th class="py-2.5 px-2 text-right font-mono">M</th>
+                        <th class="py-2.5 px-2 text-right font-mono">R</th>
+                        <th class="py-2.5 px-2 text-right font-mono font-black text-emerald-400">W</th>
+                        <th class="py-2.5 pr-4 text-right font-mono">Econ</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800/60 font-semibold">
                       ${teamBowlers.map((p, idx) => `
                         <tr>
-                          <td class="py-2.5 px-2 text-center font-bold text-[10px] text-slate-500">${idx + 1}</td>
-                          <td class="py-2.5 px-2 font-bold text-white truncate max-w-[120px]">${p.name}</td>
-                          <td class="py-2.5 px-1.5 text-right font-mono text-slate-400">${p.overs}</td>
-                          <td class="py-2.5 px-1 text-right font-mono text-slate-400">${p.maidens || 0}</td>
-                          <td class="py-2.5 px-1.5 text-right font-mono text-slate-300">${p.runsConceded}</td>
-                          <td class="py-2.5 px-1.5 text-right font-mono font-black text-emerald-400">${p.wickets}</td>
-                          <td class="py-2.5 pr-2.5 text-right font-mono text-slate-400">${p.econ}</td>
+                          <td class="py-2.5 px-3 text-center font-bold text-xs text-slate-500">${idx + 1}</td>
+                          <td class="py-2.5 px-3 font-bold text-white truncate max-w-[140px]">${p.name}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-400">${p.overs}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-400">${p.maidens || 0}</td>
+                          <td class="py-2.5 px-2 text-right font-mono text-slate-300">${p.runsConceded}</td>
+                          <td class="py-2.5 px-2 text-right font-mono font-black text-emerald-400">${p.wickets}</td>
+                          <td class="py-2.5 pr-4 text-right font-mono text-slate-400">${p.econ}</td>
                         </tr>
                       `).join('')}
                     </tbody>
@@ -2742,39 +3025,55 @@
       renderIcons();
     }
 
+    function switchLeaderboardMatch(matchId) {
+      currentLeaderboardMatchId = matchId;
+      const container = document.getElementById('appContent');
+      renderAwardsScreen(container);
+      renderIcons();
+    }
+
     /**
-     * SCREEN 6: TEAMS & SQUADS (SEAMLESS FOR SPECTATORS; ADMIN CAN REGISTER)
+     * SCREEN 6: TEAMS & SQUADS (WITH ADMIN DELETE OPTION)
      */
     function renderSquadsScreen(container) {
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Teams & Squads', '4 Franchises')}
 
-          <div class="space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${Object.values(AppState.teams).map(t => `
-              <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-3.5 shadow-xl space-y-2.5">
+              <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3">
                 <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-2.5">
-                    ${renderTeamLogo(t.id, "w-10 h-10")}
+                  <div class="flex items-center space-x-3">
+                    ${renderTeamLogo(t.id, "w-10 h-10 sm:w-12 sm:h-12")}
                     <div>
-                      <h3 class="font-display text-xl font-black text-white leading-none">${t.name}</h3>
-                      <div class="text-[11px] text-slate-400 font-bold">Captain: ${t.captain} • (${t.squad.length} Players)</div>
+                      <h3 class="font-display text-xl sm:text-2xl font-black text-white leading-none">${t.name}</h3>
+                      <div class="text-[11px] sm:text-xs text-slate-400 font-bold mt-0.5">Captain: ${t.captain} • (${t.squad.length} Players)</div>
                     </div>
                   </div>
                   <!-- Admin Only Register Button -->
                   ${isAdmin ? `
-                    <button onclick="openRegisterPlayerModal('${t.id}')" class="px-2.5 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase shadow-md flex items-center gap-1 touch-target">
-                      <i data-lucide="user-plus" class="w-3 h-3"></i> Register
+                    <button onclick="openRegisterPlayerModal('${t.id}')" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase shadow-md flex items-center gap-1.5 touch-target">
+                      <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                      <span>Add</span>
                     </button>
                   ` : ''}
                 </div>
 
-                <div class="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-slate-800">
+                <!-- Squad Player Roster with Admin Delete Button -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800">
                   ${t.squad.map(p => `
-                    <button onclick="openPlayerCardModal('${p}')" class="p-2 rounded-xl bg-slate-900/70 border border-slate-800/80 text-left text-xs font-semibold text-slate-300 hover:text-white flex items-center justify-between touch-target">
-                      <span class="truncate">${p}</span>
-                      <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600"></i>
-                    </button>
+                    <div class="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-900/70 border border-slate-800/80 text-xs font-semibold text-slate-300">
+                      <button onclick="openPlayerCardModal('${p}')" class="flex-1 text-left truncate flex items-center justify-between mr-2 hover:text-white touch-target">
+                        <span class="truncate">${p}</span>
+                        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600"></i>
+                      </button>
+                      ${isAdmin ? `
+                        <button onclick="deletePlayer('${t.id}', '${p}')" title="Delete ${p}" class="p-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-all touch-target shrink-0">
+                          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                      ` : ''}
+                    </div>
                   `).join('')}
                 </div>
               </div>
@@ -2834,51 +3133,52 @@
       const completed = AppState.fixtures.filter(f => f.status === 'completed' && f.scorecard);
 
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Results Archive', `${completed.length} Completed Matches`)}
 
           ${completed.length === 0 ? `
-            <div class="py-16 text-center text-slate-500 text-xs">
+            <div class="py-16 text-center text-slate-500 text-xs sm:text-sm">
               No completed matches yet. Completed matches will archive here.
             </div>
           ` : `
-            <div class="space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               ${completed.map(f => {
                 const sc = f.scorecard;
                 const inn1 = sc.innings1;
                 const inn2 = sc.innings2;
 
                 return `
-                  <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 shadow-xl space-y-2.5">
+                  <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3">
                     <div class="flex items-center justify-between">
-                      <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">${f.name}</span>
-                      <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Finished</span>
+                      <span class="text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-400">${f.name}</span>
+                      <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold">Finished</span>
                     </div>
 
                     <div class="space-y-2 py-1">
-                      <div class="flex items-center justify-between text-xs font-bold">
-                        <div class="flex items-center space-x-2">
-                          ${renderTeamLogo(inn1.battingTeam, "w-6 h-6")}
+                      <div class="flex items-center justify-between text-xs sm:text-sm font-bold">
+                        <div class="flex items-center space-x-2.5">
+                          ${renderTeamLogo(inn1.battingTeam, "w-6 h-6 sm:w-7 sm:h-7")}
                           <span class="text-white">${inn1.battingTeam}</span>
                         </div>
                         <span class="font-mono text-slate-200">${inn1.runs}/${inn1.wickets} (${Math.floor(inn1.balls/6)}.${inn1.balls%6} ov)</span>
                       </div>
 
-                      <div class="flex items-center justify-between text-xs font-bold">
-                        <div class="flex items-center space-x-2">
-                          ${renderTeamLogo(inn2.battingTeam, "w-6 h-6")}
+                      <div class="flex items-center justify-between text-xs sm:text-sm font-bold">
+                        <div class="flex items-center space-x-2.5">
+                          ${renderTeamLogo(inn2.battingTeam, "w-6 h-6 sm:w-7 sm:h-7")}
                           <span class="text-white">${inn2.battingTeam}</span>
                         </div>
                         <span class="font-mono text-slate-200">${inn2.runs}/${inn2.wickets} (${Math.floor(inn2.balls/6)}.${inn2.balls%6} ov)</span>
                       </div>
                     </div>
 
-                    <div class="text-center py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400">
+                    <div class="text-center py-2 px-3 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400">
                       ${f.result}
                     </div>
 
                     <button onclick="shareScorecardWhatsApp(${f.id})" class="w-full py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-1.5 touch-target">
-                      <i data-lucide="share-2" class="w-4 h-4"></i> Share On WhatsApp
+                      <i data-lucide="share-2" class="w-4 h-4"></i>
+                      <span>Share On WhatsApp</span>
                     </button>
                   </div>
                 `;
@@ -2894,17 +3194,17 @@
      */
     function renderAdminScreen(container) {
       if (!isAdmin) {
-        // SPECTATOR VIEW: SECURE PIN LOGIN PROMPT
+        // PIN LOGIN PROMPT
         container.innerHTML = `
-          <div class="space-y-4">
+          <div class="space-y-4 max-w-md mx-auto">
             ${renderScreenHeader('Admin Portal', 'Official Scorer Authorization')}
 
-            <div class="rounded-3xl bg-[#0D1424] border border-amber-500/40 p-5 shadow-2xl space-y-4 text-center">
-              <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-400 mx-auto flex items-center justify-center">
-                <i data-lucide="lock" class="w-6 h-6"></i>
+            <div class="rounded-3xl bg-[#0D1424] border border-amber-500/40 p-5 sm:p-6 shadow-2xl space-y-4 text-center">
+              <div class="w-14 h-14 rounded-full bg-amber-500/10 text-amber-400 mx-auto flex items-center justify-center">
+                <i data-lucide="lock" class="w-7 h-7"></i>
               </div>
               <div>
-                <h3 class="text-base font-black text-white uppercase tracking-wider">Enter Scorer PIN</h3>
+                <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Enter Scorer PIN</h3>
                 <p class="text-xs text-slate-400 mt-1">Enter 4-digit PIN to unlock match scoring, rule editing, and squad management.</p>
               </div>
 
@@ -2929,51 +3229,51 @@
         return;
       }
 
-      // ADMIN LOGGED IN DASHBOARD
+      // ADMIN DASHBOARD
       container.innerHTML = `
-        <div class="space-y-3.5">
+        <div class="space-y-4">
           ${renderScreenHeader('Admin Control', 'Official Scorer Mode Active')}
 
           <!-- Scorer Status Badge -->
-          <div class="rounded-3xl bg-amber-500/10 border border-amber-500/40 p-4 shadow-xl flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                <i data-lucide="unlock" class="w-5 h-5"></i>
+          <div class="rounded-3xl bg-amber-500/10 border border-amber-500/40 p-4 sm:p-5 shadow-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                <i data-lucide="unlock" class="w-6 h-6"></i>
               </div>
               <div>
-                <div class="text-xs font-black text-white uppercase">Scorer Access Active</div>
-                <div class="text-[10px] text-amber-300">Full administrative permissions enabled</div>
+                <div class="text-xs sm:text-sm font-black text-white uppercase">Scorer Access Active</div>
+                <div class="text-[10px] sm:text-xs text-amber-300">Full administrative permissions enabled</div>
               </div>
             </div>
-            <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold border border-slate-700 touch-target">
+            <button onclick="logoutAdmin()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 touch-target">
               Log Out
             </button>
           </div>
 
           <!-- Quick Actions -->
-          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 shadow-xl space-y-2.5">
-            <div class="text-xs font-black text-slate-400 uppercase tracking-wider px-1">Scorer Operations</div>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="openQuickRegisterModal()" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1 touch-target">
-                <i data-lucide="user-plus" class="w-4 h-4 text-purple-400"></i>
+          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3">
+            <div class="text-xs sm:text-sm font-black text-slate-400 uppercase tracking-wider px-1">Scorer Operations</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <button onclick="openQuickRegisterModal()" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1.5 touch-target">
+                <i data-lucide="user-plus" class="w-5 h-5 text-purple-400"></i>
                 <div class="text-xs font-bold text-white">Register Player</div>
                 <div class="text-[10px] text-slate-500">Add player to squad</div>
               </button>
 
-              <button onclick="openEditRulesModal()" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1 touch-target">
-                <i data-lucide="edit-3" class="w-4 h-4 text-amber-400"></i>
+              <button onclick="openEditRulesModal()" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1.5 touch-target">
+                <i data-lucide="edit-3" class="w-5 h-5 text-amber-400"></i>
                 <div class="text-xs font-bold text-white">Edit Rules</div>
                 <div class="text-[10px] text-slate-500">Update guidelines</div>
               </button>
 
-              <button onclick="navigateTo('fixtures')" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1 touch-target">
-                <i data-lucide="play-circle" class="w-4 h-4 text-emerald-400"></i>
+              <button onclick="navigateTo('fixtures')" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1.5 touch-target">
+                <i data-lucide="play-circle" class="w-5 h-5 text-emerald-400"></i>
                 <div class="text-xs font-bold text-white">Start Fixture</div>
                 <div class="text-[10px] text-slate-500">Toss & scoring</div>
               </button>
 
-              <button onclick="navigateTo('live')" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1 touch-target">
-                <i data-lucide="radio" class="w-4 h-4 text-rose-400"></i>
+              <button onclick="navigateTo('live')" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left space-y-1.5 touch-target">
+                <i data-lucide="radio" class="w-5 h-5 text-rose-400"></i>
                 <div class="text-xs font-bold text-white">Live Match</div>
                 <div class="text-[10px] text-slate-500">Open score center</div>
               </button>
@@ -2981,13 +3281,13 @@
           </div>
 
           <!-- Tournament Database Management -->
-          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 shadow-xl space-y-3">
+          <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3">
             <div>
-              <h3 class="text-xs font-black text-white uppercase tracking-wider">Database & Backups</h3>
-              <p class="text-[11px] text-slate-400 mt-0.5">Backup state or restore tournament progress.</p>
+              <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Database & Backups</h3>
+              <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Backup state or restore tournament progress.</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-3">
               <button onclick="exportBackupJSON()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase border border-slate-700 touch-target">
                 Export JSON
               </button>
@@ -3067,15 +3367,7 @@
           playerStats: {},
           liveMatch: null,
           lastBroadcast: null,
-          rules: [
-            "1. Matches are played with tape-ball, 8 overs per side.",
-            "2. Strict Bowler Limit: Maximum 2.0 overs per bowler. No bowler can bowl consecutive overs.",
-            "3. Super Ball Rule: Batting side can call 1 Super Ball between Overs 2.0 and 6.6. Runs off the bat are DOUBLED (2x). If batsman gets OUT, a penalty of -5 RUNS is deducted from total.",
-            "4. Extras: Wide (+1 run) and No-Ball (+1 run with Free Hit). Byes & Leg-byes are not counted (strict bat/boundary runs only).",
-            "5. Free Hit: Dismissal is Run Out only. If a Super Ball is bowled on a Free Hit and batsman is caught/bowled, it is Not Out but -5 runs are deducted.",
-            "6. Playing 11: Exactly 11 players must be selected per team before the coin toss.",
-            "7. Tournament Progression: Top team in group goes directly to Grand Final. 2nd and 3rd place play the Knockout Playoff."
-          ],
+          rules: [...INITIAL_RULES],
           updatedAt: Date.now()
         };
         populateInitialStats();
@@ -3259,7 +3551,7 @@
       try {
         loadState();
         const badge = document.getElementById('nav-league-badge');
-        if (badge) badge.innerHTML = renderLeagueLogo("w-8 h-8");
+        if (badge) badge.innerHTML = renderLeagueLogo("w-8 h-8 sm:w-10 sm:h-10");
         navigateTo('home');
       } catch (err) {
         console.error("Fatal initialization error:", err);
