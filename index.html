@@ -818,7 +818,9 @@
         navigationHistory.push(view);
       }
       AppState.currentView = view;
-      window.scrollTo(0, 0);
+      if (trackHistory) {
+        window.scrollTo(0, 0);
+      }
 
       // Keep screen awake while on live scoring & spectating view
       if (view === 'live') {
@@ -1280,6 +1282,9 @@
     /**
      * SCREEN 2: LIVE MATCH & MAIN SCORECARD (RESPONSIVE GRID FOR PC)
      */
+    /**
+     * SCREEN 2: LIVE MATCH & SCORING CONSOLE (ZERO-SCROLL MOBILE DASHBOARD)
+     */
     function renderLiveScorerScreen(container) {
       const match = AppState.liveMatch;
 
@@ -1312,9 +1317,9 @@
       const currentOverNumber = Math.floor(legalBalls / 6) + 1;
       const ovFormatted = `${Math.floor(legalBalls / 6)}.${legalBalls % 6}`;
 
-      const striker = inn.batsmen[inn.striker] || { name: inn.striker, runs: 0, balls: 0, fours: 0, sixes: 0 };
-      const nonStriker = inn.batsmen[inn.nonStriker] || { name: inn.nonStriker, runs: 0, balls: 0, fours: 0, sixes: 0 };
-      const bowler = inn.bowlers[inn.currentBowler] || { name: inn.currentBowler, balls: 0, runs: 0, wickets: 0, maidens: 0 };
+      const striker = inn.batsmen[inn.striker] || { name: inn.striker || "Striker", runs: 0, balls: 0, fours: 0, sixes: 0 };
+      const nonStriker = inn.batsmen[inn.nonStriker] || { name: inn.nonStriker || "Non-Striker", runs: 0, balls: 0, fours: 0, sixes: 0 };
+      const bowler = inn.bowlers[inn.currentBowler] || { name: inn.currentBowler || "Bowler", balls: 0, runs: 0, wickets: 0, maidens: 0 };
 
       const bowlerOv = `${Math.floor(bowler.balls / 6)}.${bowler.balls % 6}`;
       const crr = inn.balls > 0 ? ((inn.runs / inn.balls) * 6).toFixed(2) : "0.00";
@@ -1349,302 +1354,223 @@
       const superBallEligible = currentOverNumber >= 2 && currentOverNumber <= 7 && !inn.superBallUsed;
 
       container.innerHTML = `
-        <div class="space-y-4">
-          ${renderScreenHeader(`Match ${match.fixtureId}`, `Innings ${match.currentInnings}`)}
+        <div class="space-y-2 sm:space-y-3">
+          
+          <!-- Compact Header Bar -->
+          <div class="flex items-center justify-between pb-1">
+            <div class="flex items-center space-x-2">
+              <button onclick="navigateBack()" class="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 touch-target flex items-center space-x-1">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Back</span>
+              </button>
+              <span class="font-display text-lg sm:text-xl font-black text-white uppercase tracking-wider leading-none">
+                Match ${match.fixtureId} <span class="text-xs text-slate-400 font-sans font-bold">Inn ${match.currentInnings}</span>
+              </span>
+            </div>
 
-          <!-- Responsive Two-Column Layout on Laptop/PC -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <button onclick="openFullScorecardModal()" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-500/40 text-amber-300 font-bold text-xs uppercase tracking-wider flex items-center space-x-1.5 touch-target shadow">
+              <i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Scorecard</span>
+            </button>
+          </div>
+
+          <!-- Two-Column Layout on PC (lg:grid-cols-12), Zero-Scroll Single View on Mobile -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 sm:gap-3 lg:gap-4">
             
-            <!-- Left Column: Metrics, Crease, Tables (col-span-7) -->
-            <div class="lg:col-span-7 space-y-4">
-              <!-- MAIN SCORECARD -->
-              <div class="rounded-3xl bg-gradient-to-b from-[#111A2E] to-[#0A101D] border border-slate-800 p-4 sm:p-5 shadow-xl space-y-3.5">
-                
-                <!-- Teams Header: Batting (Left) vs Bowling (Right) -->
-                <div class="grid grid-cols-2 gap-2 items-center pb-3 border-b border-slate-800/80">
-                  <div class="flex items-center space-x-2.5">
-                    ${renderTeamLogo(inn.battingTeam, "w-10 h-10 sm:w-12 sm:h-12")}
-                    <div class="overflow-hidden">
-                      <span class="text-[9px] sm:text-[10px] uppercase font-black text-amber-400 tracking-wider block">Batting</span>
-                      <span class="font-bold text-xs sm:text-sm text-white truncate block">${batTeam?.name || inn.battingTeam}</span>
+            <!-- Left Console Column: Fits 100% on Mobile Viewport Without Scrolling (lg:col-span-6) -->
+            <div class="lg:col-span-6 space-y-2 sm:space-y-2.5">
+              
+              <!-- 1. COMPACT LIVE SCORE HUD -->
+              <div class="rounded-2xl bg-gradient-to-r from-[#111A2E] via-[#0E1528] to-[#0A101D] border border-slate-800 p-2.5 sm:p-3 shadow-lg">
+                <div class="flex items-center justify-between">
+                  <!-- Batting Team & Big Score -->
+                  <div class="flex items-center space-x-2 sm:space-x-2.5">
+                    ${renderTeamLogo(inn.battingTeam, "w-10 h-10 sm:w-11 sm:h-11")}
+                    <div>
+                      <div class="flex items-baseline space-x-1.5 leading-none">
+                        <span class="font-display text-3xl sm:text-4xl font-black text-white leading-none">${inn.runs}/${inn.wickets}</span>
+                        <span class="font-display text-lg sm:text-xl font-black text-amber-400 leading-none">${ovFormatted}<span class="text-[10px] text-slate-500 font-sans font-bold">/${match.totalOvers}.0</span></span>
+                      </div>
+                      <div class="text-[10px] font-bold text-slate-400 truncate max-w-[125px] sm:max-w-none mt-0.5">
+                        ${batTeam?.name || inn.battingTeam}
+                      </div>
                     </div>
                   </div>
 
-                  <div class="flex items-center justify-end space-x-2.5 text-right">
-                    <div class="overflow-hidden">
-                      <span class="text-[9px] sm:text-[10px] uppercase font-black text-slate-400 tracking-wider block">Bowling</span>
-                      <span class="font-bold text-xs sm:text-sm text-white truncate block">${bowlTeam?.name || inn.bowlingTeam}</span>
+                  <!-- Target / CRR / RRR & Status -->
+                  <div class="text-right">
+                    ${match.currentInnings === 2 ? `
+                      <div class="text-xs font-black text-emerald-400 font-mono leading-tight">
+                        Need ${needed > 0 ? needed : 0} in ${ballsRemaining}b
+                      </div>
+                      <div class="text-[10px] text-amber-300 font-mono font-bold leading-tight">
+                        RRR: ${rrr} • CRR: ${crr}
+                      </div>
+                    ` : `
+                      <div class="text-xs font-black text-emerald-400 font-mono leading-tight">
+                        CRR: ${crr}
+                      </div>
+                      <div class="text-[10px] text-slate-400 font-bold leading-tight">
+                        vs ${bowlTeam?.shortName || inn.bowlingTeam}
+                      </div>
+                    `}
+                    <div class="flex items-center justify-end gap-1 mt-1">
+                      ${inn.isFreeHit ? `
+                        <span class="px-1.5 py-0.2 rounded bg-red-600 text-white text-[9px] font-black uppercase tracking-wider animate-pulse">
+                          Free Hit
+                        </span>
+                      ` : ''}
+                      ${inn.isSuperBallActive ? `
+                        <span class="px-1.5 py-0.2 rounded bg-purple-600 text-white text-[9px] font-black uppercase tracking-wider animate-bounce">
+                          Super Ball 2x
+                        </span>
+                      ` : ''}
                     </div>
-                    ${renderTeamLogo(inn.bowlingTeam, "w-10 h-10 sm:w-12 sm:h-12")}
                   </div>
                 </div>
 
-                <!-- 3-Column Metrics Dashboard -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">Score</span>
-                    <span class="font-display text-4xl sm:text-5xl font-black text-white leading-none block mt-1">${inn.runs}/${inn.wickets}</span>
-                  </div>
-
-                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">Overs</span>
-                    <span class="font-display text-4xl sm:text-5xl font-black text-amber-400 leading-none block mt-1">${ovFormatted}</span>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold block">of ${match.totalOvers}.0</span>
-                  </div>
-
-                  <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-center">
-                    <span class="text-[10px] sm:text-xs text-slate-400 uppercase font-black tracking-wider block">${match.currentInnings === 2 ? 'Target' : 'CRR'}</span>
-                    <span class="font-display text-3xl sm:text-4xl font-black text-emerald-400 leading-none block mt-1">${match.currentInnings === 2 ? target : crr}</span>
-                    ${match.currentInnings === 2 ? `<span class="text-[9px] sm:text-[10px] text-amber-300 font-mono font-bold block">Req: ${rrr}</span>` : `<span class="text-[9px] sm:text-[10px] text-slate-500 font-bold block">Runs/Over</span>`}
-                  </div>
-                </div>
-
-                <!-- Badges -->
-                <div class="flex items-center justify-center gap-2 flex-wrap pt-1">
-                  ${inn.isFreeHit ? `
-                    <span class="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500 text-red-300 text-[10px] sm:text-xs font-black uppercase tracking-wider animate-pulse">
-                      Free Hit Active
-                    </span>
-                  ` : ''}
-                  ${inn.isSuperBallActive ? `
-                    <span class="px-2.5 py-0.5 rounded-full bg-purple-600/30 border border-purple-500 text-purple-300 text-[10px] sm:text-xs font-black uppercase tracking-wider animate-bounce">
-                      Super Ball Active (2x Runs / -5 Out)
-                    </span>
-                  ` : !inn.superBallUsed ? `
-                    <span class="px-2.5 py-0.5 rounded-full bg-purple-950/40 border border-purple-800 text-purple-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-                      Super Ball Available
-                    </span>
-                  ` : `
-                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-                      Super Ball Used
-                    </span>
-                  `}
-                  <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-[10px] sm:text-xs font-mono font-bold">
-                    Extras: ${inn.extras.wides} WD, ${inn.extras.noBalls} NB
-                  </span>
-                </div>
-
-                <!-- Win Predictor Bar -->
                 ${match.currentInnings === 2 ? `
-                  <div class="pt-2 border-t border-slate-800/80 space-y-1">
-                    <div class="flex justify-between text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                      <span class="text-amber-400">${inn.battingTeam}: Need ${needed > 0 ? needed : 0} in ${ballsRemaining}b</span>
-                      <span class="text-slate-400">Win: ${winProbA}%</span>
-                    </div>
-                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
-                      <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500" style="width: ${winProbA}%"></div>
-                      <div class="h-full bg-slate-700 transition-all duration-500" style="width: ${winProbB}%"></div>
-                    </div>
+                  <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden flex mt-2">
+                    <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500" style="width: ${winProbA}%"></div>
+                    <div class="h-full bg-slate-700 transition-all duration-500" style="width: ${winProbB}%"></div>
                   </div>
                 ` : ''}
               </div>
 
-              <!-- AT THE CREASE -->
-              <div class="rounded-3xl bg-[#0D1424] border border-slate-800 p-4 space-y-3 shadow-xl">
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-wider px-1">Active Batters & Bowler</div>
-
-                <!-- Striker -->
-                <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-between">
-                  <div class="truncate mr-2">
-                    <div class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
-                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                      <span class="truncate">${striker.name}</span>
-                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-black uppercase">Strike</span>
+              <!-- 2. HIGH-DENSITY CREASE HUD (Batters & Bowler) -->
+              <div class="rounded-2xl bg-[#0D1424] border border-slate-800 p-2 sm:p-2.5 shadow-lg grid grid-cols-2 gap-2 text-xs">
+                <!-- Batters -->
+                <div class="space-y-1 border-r border-slate-800/80 pr-2">
+                  <!-- Striker -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-1.5 truncate">
+                      <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
+                      <span class="font-black text-amber-300 truncate text-[11px] sm:text-xs">${striker.name}*</span>
                     </div>
-                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
-                      ${striker.fours} 4s • ${striker.sixes} 6s • SR: ${striker.balls > 0 ? ((striker.runs / striker.balls) * 100).toFixed(1) : "0.0"}
-                    </div>
-                  </div>
-                  <div class="text-right shrink-0">
-                    <span class="font-mono text-2xl font-black text-white">${striker.runs}</span>
-                    <span class="text-[10px] sm:text-xs text-slate-400 font-mono block">(${striker.balls}b)</span>
-                  </div>
-                </div>
-
-                <!-- Non-Striker -->
-                <div class="p-3 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-                  <div class="truncate mr-2">
-                    <div class="text-xs sm:text-sm font-bold text-slate-200 truncate">
-                      ${nonStriker.name}
-                    </div>
-                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
-                      ${nonStriker.fours} 4s • ${nonStriker.sixes} 6s • SR: ${nonStriker.balls > 0 ? ((nonStriker.runs / nonStriker.balls) * 100).toFixed(1) : "0.0"}
+                    <div class="text-right shrink-0">
+                      <span class="font-mono font-black text-white text-xs sm:text-sm">${striker.runs}</span>
+                      <span class="text-[9px] text-slate-400 font-mono">(${striker.balls})</span>
                     </div>
                   </div>
-                  <div class="text-right shrink-0">
-                    <span class="font-mono text-xl font-bold text-slate-300">${nonStriker.runs}</span>
-                    <span class="text-[10px] sm:text-xs text-slate-500 font-mono block">(${nonStriker.balls}b)</span>
+                  <!-- Non-Striker -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-1.5 truncate pl-3.5">
+                      <span class="font-bold text-slate-300 truncate text-[11px] sm:text-xs">${nonStriker.name}</span>
+                    </div>
+                    <div class="text-right shrink-0">
+                      <span class="font-mono font-bold text-slate-300 text-xs sm:text-sm">${nonStriker.runs}</span>
+                      <span class="text-[9px] text-slate-500 font-mono">(${nonStriker.balls})</span>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Bowler -->
-                <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-between">
-                  <div class="truncate mr-2">
-                    <div class="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
-                      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                      <span class="truncate">${bowler.name}</span>
-                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase">Bowling</span>
+                <!-- Bowler & Extras -->
+                <div class="space-y-1 pl-1 flex flex-col justify-between">
+                  <!-- Bowler -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-1.5 truncate">
+                      <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                      <span class="font-black text-emerald-300 truncate text-[11px] sm:text-xs">${bowler.name}</span>
                     </div>
-                    <div class="text-[10px] sm:text-xs text-slate-400 mt-1 font-mono">
-                      Econ: ${bowler.balls > 0 ? ((bowler.runs / bowler.balls) * 6).toFixed(1) : "0.0"} • Maidens: ${bowler.maidens || 0}
+                    <div class="text-right shrink-0">
+                      <span class="font-mono font-black text-emerald-400 text-xs sm:text-sm">${bowler.wickets}/${bowler.runs}</span>
                     </div>
                   </div>
-                  <div class="text-right shrink-0">
-                    <span class="font-mono text-2xl font-black text-emerald-400">${bowler.wickets}/${bowler.runs}</span>
-                    <span class="text-[10px] sm:text-xs text-slate-400 font-mono block">(${bowlerOv}/2.0 ov)</span>
+                  <!-- Bowler Overs & Extras -->
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                    <span>${bowlerOv}/2.0 ov</span>
+                    <span class="text-slate-500 font-bold">WD:${inn.extras.wides} NB:${inn.extras.noBalls}</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Right Column: Timeline, Controls & In-Game Scorecard (col-span-5) -->
-            <div class="lg:col-span-5 space-y-4">
-              <!-- TIMELINE -->
-              <div class="bg-slate-900/70 border border-slate-800 rounded-3xl p-4">
-                <div class="flex items-center justify-between mb-2.5">
-                  <span class="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-wider">Over ${currentOverNumber}.x Timeline</span>
-                  <span class="text-[10px] sm:text-xs text-slate-500 font-mono">Last 8 deliveries</span>
-                </div>
-                <div class="flex items-center space-x-2 overflow-x-auto pb-1" id="currentOverBalls">
+              <!-- 3. CURRENT OVER TIMELINE STRIP -->
+              <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl px-2.5 py-1">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider shrink-0 mr-2">Ov ${currentOverNumber}.x:</span>
+                <div class="flex items-center space-x-1.5 overflow-x-auto py-0.5" id="currentOverBalls">
                   ${renderTimelineBalls(inn.timeline.slice(-8))}
                 </div>
               </div>
 
-              <!-- SCORER CONTROLS (ADMIN ONLY) -->
+              <!-- 4. TOUCH-OPTIMIZED SCORER CONTROLS (ADMIN ONLY) -->
               ${isAdmin ? `
-                <div class="bg-[#0E1528] border border-amber-500/40 rounded-3xl p-4 space-y-3 shadow-2xl">
-                  <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-400">
-                    <span class="text-amber-400 flex items-center gap-1.5">
-                      <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-                      <span>Scorer Controls</span>
-                    </span>
-                    <span>Undo History (${inn.history ? inn.history.length : 0}/16)</span>
-                  </div>
-
-                  <!-- Actions -->
-                  <div class="grid grid-cols-3 gap-2">
+                <div class="bg-[#0E1528] border border-amber-500/40 rounded-2xl p-2 sm:p-2.5 space-y-1.5 shadow-2xl">
+                  <!-- Utility Row: Super Ball, Swap Strike, Retire, Undo -->
+                  <div class="grid grid-cols-4 gap-1.5 text-center">
                     <button 
                       onclick="triggerSuperBallCall()" 
                       ${!superBallEligible || inn.isSuperBallActive ? 'disabled' : ''}
-                      class="py-3 px-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all border touch-target ${
+                      class="py-2 px-1 rounded-xl font-black text-[10px] uppercase tracking-wider transition-all border touch-target ${
                         inn.isSuperBallActive 
                           ? 'bg-purple-600 border-purple-400 text-white animate-pulse' 
                           : superBallEligible 
-                            ? 'bg-purple-950/80 border-purple-600 text-purple-200 hover:bg-purple-900' 
+                            ? 'bg-purple-950/90 border-purple-600 text-purple-200 hover:bg-purple-900' 
                             : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
                       }">
-                      ${inn.isSuperBallActive ? 'Superball ON' : 'Super Ball'}
+                      ${inn.isSuperBallActive ? 'SB Active' : 'Super Ball'}
                     </button>
 
-                    <button onclick="swapStrikeManual()" class="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider border border-slate-700 transition-all touch-target">
+                    <button onclick="swapStrikeManual()" class="py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] uppercase tracking-wider border border-slate-700 transition-all touch-target">
                       Swap Strike
                     </button>
 
-                    <button onclick="openRetireModal()" class="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider border border-slate-700 transition-all touch-target">
-                      Retire Out
+                    <button onclick="openRetireModal()" class="py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] uppercase tracking-wider border border-slate-700 transition-all touch-target">
+                      Retire
+                    </button>
+
+                    <button onclick="undoLastDelivery()" ${!inn.history || inn.history.length === 0 ? 'disabled' : ''} class="py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-[10px] uppercase tracking-wider border border-slate-700 touch-target ${!inn.history || inn.history.length === 0 ? 'opacity-40 cursor-not-allowed text-slate-600' : ''}">
+                      Undo (${inn.history ? inn.history.length : 0})
                     </button>
                   </div>
 
-                  <!-- Runs Grid -->
-                  <div class="grid grid-cols-3 gap-2.5">
-                    <button onclick="recordDelivery({ runs: 0 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-2xl font-mono border border-slate-700 shadow touch-target">0</button>
-                    <button onclick="recordDelivery({ runs: 1 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">1</button>
-                    <button onclick="recordDelivery({ runs: 2 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">2</button>
-                    <button onclick="recordDelivery({ runs: 3 })" class="py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">3</button>
-                    <button onclick="recordDelivery({ runs: 4, isBoundary: true })" class="py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-2xl font-mono shadow-md border border-blue-400 touch-target">4</button>
-                    <button onclick="recordDelivery({ runs: 6, isBoundary: true })" class="py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-2xl font-mono shadow-md border border-amber-300 touch-target">6</button>
+                  <!-- Runs Grid (0, 1, 2, 3, 4, 6) -->
+                  <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                    <button onclick="recordDelivery({ runs: 0 })" class="py-2.5 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-2xl font-mono border border-slate-700 shadow touch-target">0</button>
+                    <button onclick="recordDelivery({ runs: 1 })" class="py-2.5 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">1</button>
+                    <button onclick="recordDelivery({ runs: 2 })" class="py-2.5 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">2</button>
+                    <button onclick="recordDelivery({ runs: 3 })" class="py-2.5 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-black text-2xl font-mono border border-slate-700 shadow touch-target">3</button>
+                    <button onclick="recordDelivery({ runs: 4, isBoundary: true })" class="py-2.5 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-2xl font-mono shadow-md border border-blue-400 touch-target">4</button>
+                    <button onclick="recordDelivery({ runs: 6, isBoundary: true })" class="py-2.5 sm:py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-2xl font-mono shadow-md border border-amber-300 touch-target">6</button>
                   </div>
 
-                  <!-- Extras, Wicket & Undo -->
-                  <div class="grid grid-cols-4 gap-2 pt-1">
-                    <button onclick="recordDelivery({ isWide: true })" class="py-3 rounded-xl bg-yellow-600/25 hover:bg-yellow-600/35 border border-yellow-500/50 text-yellow-300 font-black text-xs uppercase touch-target">
+                  <!-- Extras & Wicket -->
+                  <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                    <button onclick="recordDelivery({ isWide: true })" class="py-2 sm:py-2.5 rounded-xl bg-yellow-600/25 hover:bg-yellow-600/35 border border-yellow-500/50 text-yellow-300 font-black text-xs uppercase touch-target">
                       WD (+1)
                     </button>
-                    <button onclick="recordDelivery({ isNoBall: true })" class="py-3 rounded-xl bg-orange-600/25 hover:bg-orange-600/35 border border-orange-500/50 text-orange-300 font-black text-xs uppercase touch-target">
+                    <button onclick="recordDelivery({ isNoBall: true })" class="py-2 sm:py-2.5 rounded-xl bg-orange-600/25 hover:bg-orange-600/35 border border-orange-500/50 text-orange-300 font-black text-xs uppercase touch-target">
                       NB (+1)
                     </button>
-                    <button onclick="openWicketModal()" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase border border-rose-400 shadow-md touch-target">
+                    <button onclick="openWicketModal()" class="py-2 sm:py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase border border-rose-400 shadow-md touch-target">
                       WICKET
-                    </button>
-                    <button onclick="undoLastDelivery()" ${!inn.history || inn.history.length === 0 ? 'disabled' : ''} class="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase border border-slate-700 touch-target ${!inn.history || inn.history.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}">
-                      UNDO
                     </button>
                   </div>
                 </div>
               ` : `
-                <div class="rounded-3xl bg-slate-900/60 border border-slate-800 p-4 text-center text-xs text-slate-400">
+                <div class="rounded-2xl bg-slate-900/60 border border-slate-800 p-3 text-center text-xs text-slate-400">
                   <span class="font-bold text-slate-200 block">Live Spectator Mode</span>
-                  <span class="text-[11px] text-slate-500">Scores, boundaries and analytics sync in real time.</span>
+                  <span class="text-[10px] text-slate-500">Scores & ball-by-ball updates sync in real time.</span>
                 </div>
               `}
 
-              <!-- IN-GAME SCORECARD -->
-              <div class="bg-[#0D1424] border border-slate-800 rounded-3xl p-4 shadow-xl space-y-4">
-                <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center justify-between">
+            </div>
+
+            <!-- Right Column: On PC/Laptop shows side-by-side, on Mobile Spectator shows below -->
+            <div class="${isAdmin ? 'hidden lg:block' : 'block'} lg:col-span-6 space-y-4">
+              <div class="bg-[#0D1424] border border-slate-800 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xl space-y-3">
+                <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center justify-between border-b border-slate-800 pb-2">
                   <span>Current Innings Scorecard</span>
-                  <span class="text-xs font-mono text-amber-400 font-bold">${batTeam?.shortName}</span>
+                  <span class="text-xs font-mono text-amber-400 font-bold">${batTeam?.shortName || inn.battingTeam}</span>
                 </h3>
 
                 <!-- Batting Table -->
                 <div class="overflow-x-auto">
-                  <table class="w-full text-left text-xs">
-                    <thead>
-                      <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
-                        <th class="pb-2">Batter</th>
-                        <th class="pb-2 text-right">R</th>
-                        <th class="pb-2 text-right">B</th>
-                        <th class="pb-2 text-right">4s</th>
-                        <th class="pb-2 text-right">6s</th>
-                        <th class="pb-2 text-right">SR</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/60 font-medium">
-                      ${Object.values(inn.batsmen).map(b => `
-                        <tr>
-                          <td class="py-2 text-white font-bold">
-                            ${b.name} ${b.name === inn.striker ? '*' : ''}
-                            ${b.isOut ? `<span class="text-[9px] text-rose-400 font-normal">(${b.dismissal || 'out'})</span>` : ''}
-                          </td>
-                          <td class="py-2 text-right font-black font-mono text-amber-400">${b.runs}</td>
-                          <td class="py-2 text-right font-mono text-slate-400">${b.balls}</td>
-                          <td class="py-2 text-right font-mono text-slate-300">${b.fours}</td>
-                          <td class="py-2 text-right font-mono text-slate-300">${b.sixes}</td>
-                          <td class="py-2 text-right font-mono text-slate-400">${b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}</td>
-                        </tr>
-                      `).join('')}
-                    </tbody>
-                  </table>
+                  ${renderBattingTableHtml(inn)}
                 </div>
 
                 <!-- Bowling Table -->
                 <div class="overflow-x-auto pt-2 border-t border-slate-800/80">
-                  <table class="w-full text-left text-xs">
-                    <thead>
-                      <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
-                        <th class="pb-2">Bowler</th>
-                        <th class="pb-2 text-right">O</th>
-                        <th class="pb-2 text-right">M</th>
-                        <th class="pb-2 text-right">R</th>
-                        <th class="pb-2 text-right">W</th>
-                        <th class="pb-2 text-right">Econ</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/60 font-medium">
-                      ${Object.values(inn.bowlers).map(bw => {
-                        const bwOvers = `${Math.floor(bw.balls / 6)}.${bw.balls % 6}`;
-                        return `
-                          <tr>
-                            <td class="py-2 text-white font-bold">${bw.name}</td>
-                            <td class="py-2 text-right font-mono text-slate-300">${bwOvers}/2.0</td>
-                            <td class="py-2 text-right font-mono text-slate-400">${bw.maidens || 0}</td>
-                            <td class="py-2 text-right font-mono text-slate-300">${bw.runs}</td>
-                            <td class="py-2 text-right font-black font-mono text-emerald-400">${bw.wickets}</td>
-                            <td class="py-2 text-right font-mono text-slate-400">${bw.balls > 0 ? ((bw.runs / bw.balls) * 6).toFixed(1) : "0.0"}</td>
-                          </tr>
-                        `;
-                      }).join('')}
-                    </tbody>
-                  </table>
+                  ${renderBowlingTableHtml(inn)}
                 </div>
               </div>
             </div>
@@ -1652,6 +1578,152 @@
           </div>
         </div>
       `;
+    }
+
+    function renderBattingTableHtml(inn) {
+      return `
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
+              <th class="pb-2">Batter</th>
+              <th class="pb-2 text-right">R</th>
+              <th class="pb-2 text-right">B</th>
+              <th class="pb-2 text-right">4s</th>
+              <th class="pb-2 text-right">6s</th>
+              <th class="pb-2 text-right">SR</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-medium">
+            ${Object.values(inn.batsmen).map(b => `
+              <tr>
+                <td class="py-2 text-white font-bold">
+                  ${b.name} ${b.name === inn.striker ? '*' : ''}
+                  ${b.isOut ? `<span class="text-[9px] text-rose-400 font-normal">(${b.dismissal || 'out'})</span>` : ''}
+                </td>
+                <td class="py-2 text-right font-black font-mono text-amber-400">${b.runs}</td>
+                <td class="py-2 text-right font-mono text-slate-400">${b.balls}</td>
+                <td class="py-2 text-right font-mono text-slate-300">${b.fours}</td>
+                <td class="py-2 text-right font-mono text-slate-300">${b.sixes}</td>
+                <td class="py-2 text-right font-mono text-slate-400">${b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderBowlingTableHtml(inn) {
+      return `
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-[10px] text-slate-400 border-b border-slate-800 uppercase font-black">
+              <th class="pb-2">Bowler</th>
+              <th class="pb-2 text-right">O</th>
+              <th class="pb-2 text-right">M</th>
+              <th class="pb-2 text-right">R</th>
+              <th class="pb-2 text-right">W</th>
+              <th class="pb-2 text-right">Econ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-medium">
+            ${Object.values(inn.bowlers).map(bw => {
+              const bwOvers = `${Math.floor(bw.balls / 6)}.${bw.balls % 6}`;
+              return `
+                <tr>
+                  <td class="py-2 text-white font-bold">${bw.name}</td>
+                  <td class="py-2 text-right font-mono text-slate-300">${bwOvers}/2.0</td>
+                  <td class="py-2 text-right font-mono text-slate-400">${bw.maidens || 0}</td>
+                  <td class="py-2 text-right font-mono text-slate-300">${bw.runs}</td>
+                  <td class="py-2 text-right font-black font-mono text-emerald-400">${bw.wickets}</td>
+                  <td class="py-2 text-right font-mono text-slate-400">${bw.balls > 0 ? ((bw.runs / bw.balls) * 6).toFixed(1) : "0.0"}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function openFullScorecardModal() {
+      const match = AppState.liveMatch;
+      if (!match) return;
+      const inn = match.currentInnings === 1 ? match.innings1 : match.innings2;
+      const batTeam = AppState.teams[inn.battingTeam];
+
+      const modal = document.getElementById('modalContainer');
+      modal.innerHTML = `
+        <div class="bg-[#0D1424] border border-amber-500/40 rounded-3xl p-4 sm:p-5 max-w-xl w-full space-y-3.5 shadow-2xl max-h-[88vh] flex flex-col">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
+            <div>
+              <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="file-text" class="w-4 h-4 text-amber-400"></i>
+                <span>${batTeam?.name || inn.battingTeam} Innings Scorecard</span>
+              </h3>
+              <p class="text-[10px] text-slate-400 font-mono mt-0.5">${inn.runs}/${inn.wickets} in ${Math.floor(inn.balls/6)}.${inn.balls%6} overs</p>
+            </div>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center touch-target">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="overflow-y-auto space-y-3.5 pr-1 flex-1">
+            <!-- Batting Table -->
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-black uppercase text-amber-400 tracking-wider">Batting</div>
+              <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 p-2">
+                ${renderBattingTableHtml(inn)}
+              </div>
+            </div>
+
+            <!-- Bowling Table -->
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-black uppercase text-emerald-400 tracking-wider">Bowling</div>
+              <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 p-2">
+                ${renderBowlingTableHtml(inn)}
+              </div>
+            </div>
+
+            <div class="text-[11px] text-slate-400 flex justify-between px-1">
+              <span>Extras: ${inn.extras.wides} WD, ${inn.extras.noBalls} NB</span>
+              <span>Total: ${inn.runs}/${inn.wickets}</span>
+            </div>
+          </div>
+
+          <button onclick="closeModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider touch-target shrink-0">
+            Back to Scoring
+          </button>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderIcons();
+    }
+
+    function renderTimelineBalls(balls) {
+      if (!balls || balls.length === 0) {
+        return `<span class="text-xs text-slate-500 italic">No deliveries bowled yet.</span>`;
+      }
+      return balls.map(b => {
+        let bg = "bg-slate-800 text-slate-200 border-slate-700";
+        if (b.isSuperBall) bg = "bg-purple-600 text-white border-purple-400 font-black";
+        else if (b.isWicket) bg = "bg-rose-600 text-white border-rose-500 font-black";
+        else if (b.runs === 6) bg = "bg-amber-500 text-slate-950 border-amber-300 font-black";
+        else if (b.runs === 4) bg = "bg-blue-600 text-white border-blue-400 font-black";
+        else if (b.isWide) bg = "bg-yellow-600/30 text-yellow-300 border-yellow-500/50";
+        else if (b.isNoBall) bg = "bg-orange-600/30 text-orange-300 border-orange-500/50";
+
+        let cleanLabel = b.label || '';
+        cleanLabel = cleanLabel.replace(/[^a-zA-Z0-9+()\-]/g, '');
+        if (b.isSuperBall && !cleanLabel.startsWith('SB')) {
+          cleanLabel = cleanLabel ? 'SB-' + cleanLabel : 'SB';
+        }
+
+        return `
+          <span class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-mono border shrink-0 ${bg}">
+            ${cleanLabel}
+          </span>
+        `;
+      }).join('');
     }
 
     function renderTimelineBalls(balls) {
