@@ -1,0 +1,27 @@
+{
+  "name": "Nawab Super League Season 2",
+  "short_name": "NSL S2",
+  "description": "Official live scoring and tournament portal for Nawab Super League Season 2 Tape-Ball Championship",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070B12",
+  "theme_color": "#070B12",
+  "icons": [
+    {
+      "src": "nsl_s2_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "nsl_s2_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "entertainment"]
+}
